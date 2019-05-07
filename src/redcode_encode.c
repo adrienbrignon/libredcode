@@ -9,6 +9,7 @@
 #include "redcode.h"
 #include "my_string.h"
 #include <stddef.h>
+#include "my_stdlib.h"
 
 char *my_getline(FILE *src)
 {
@@ -33,15 +34,20 @@ argument_t get_argument(char *line)
 static int encode_token(char *str, const token_t *token, FILE *fp)
 {
     char *tok = NULL;
+    char n[MAX_ARGS * 2 + 1] = {'\0'};
     char *start = str + my_strlen(token->name) + 1;
 
     fwrite(&token->code, sizeof token->code, 1, fp);
+
     tok = my_strtok(start, ", ");
+
     for (size_t i = 0; tok != NULL; i++) {
         if ((token->type[i] & get_argument(tok).type) == 0)
             return -1;
+
         tok = my_strtok(NULL, ", ");
     }
+
     return 0;
 }
 
