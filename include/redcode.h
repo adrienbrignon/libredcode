@@ -22,6 +22,11 @@ typedef enum type {
     T_COMMENT = 1 << 5
 } type_t;
 
+typedef struct argument {
+    type_t type;
+    const char *value;
+} argument_t;
+
 typedef struct token {
     const char *name;
     size_t args;
