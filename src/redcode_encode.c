@@ -59,10 +59,22 @@ const token_t *get_token(const char *str)
     return NULL;
 }
 
+char *get_argument(char *line)
+{
+    char *str = NULL;
+    int length = 0;
+    int i = 0;
+
+    for (; str[i] != ' ' && (str[i + 1] != '"' || str[i + 1] != '\0'); i++);
+    printf("=>%d\n", i);
+    return (str);
+}
+
 static void encode_metadata(char *str, FILE *dst, int length)
 {
     char *tmp = NULL;
 
+    //get_argument(str);
     str = my_strtok(str, " ");
     while (str != NULL) {
         str = my_strtok(NULL, " ");
@@ -74,17 +86,27 @@ static void encode_metadata(char *str, FILE *dst, int length)
     }
 }
 
-static void parse_metadata(FILE *src, FILE *dst)
+static int parse_metadata(FILE *src, FILE *dst)
 {
     char *line = NULL;
+    int counter = 0;
 
     while ((line = my_getline(src)) != NULL) {
-        if (my_strncmp(line, NAME_STR, my_strlen(NAME_STR)) == 0)
+        if (my_strncmp(line, NAME_STR, my_strlen(NAME_STR)) == 0) {
             encode_metadata(line, dst, NAME_LENGTH);
-        else if (my_strncmp(line, COMMENT_STR, my_strlen(COMMENT_STR)) == 0)
+            counter++;
+        }
+        else if (my_strncmp(line, COMMENT_STR, my_strlen(COMMENT_STR)) == 0) {
             encode_metadata(line, dst, COMMENT_LENGTH);
+            counter++;
+        }
+        if (counter == 2)
+            return (0);
     }
+    return (counter);
 }
+
+static int parse_name(FILE *src, FILE)
 
 static int encode_token(const char *str, const token_t *token, FILE *fp)
 {
@@ -98,8 +120,8 @@ int redcode_encode(FILE *src, FILE *dst)
     char *line = NULL;
 
     fwrite((int[]) {REDCODE_HEADER}, sizeof(int), 1, dst);
-    parse_metadata(src, dst);
-
+    if (parse_metadata(src, dst) != 0)
+        return -1;
     while ((line = my_getline(src)) != NULL) {
         const token_t *token = get_token(line);
 
