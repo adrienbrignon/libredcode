@@ -36,9 +36,13 @@ typedef struct token {
 } token_t;
 
 int redcode_encode(FILE *src, FILE *dst);
+
 int parse_comment(FILE *src, FILE *dst);
 int parse_name(FILE *src, FILE *dst);
 int encode_metadata(char *str, FILE *dst, int length);
+
+ssize_t readfile(FILE *fp, char **ptr);
+
 const token_t *get_token(const char *str);
 
 #endif

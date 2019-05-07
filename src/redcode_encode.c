@@ -54,7 +54,7 @@ int redcode_encode(FILE *src, FILE *dst)
         return -1;
     if (parse_comment(src, dst) != 0)
         return -1;
-    while ((line = my_getline(src)) != NULL) {
+    while (readfile(src, &line) >= 0) {
         const token_t *token = get_token(line);
         if (token == NULL)
             return -1;

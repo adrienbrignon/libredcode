@@ -10,9 +10,12 @@
 
 int parse_comment(FILE *src, FILE *dst)
 {
-    char *line = my_getline(src);
+    char *line = NULL;
+
+    readfile(src, &line);
 
     if (my_strncmp(line, COMMENT_STR, my_strlen(COMMENT_STR)) == 0)
         return (encode_metadata(line, dst, COMMENT_LENGTH));
-    return (-1);
+
+    return -1;
 }
