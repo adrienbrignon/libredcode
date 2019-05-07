@@ -10,6 +10,6 @@
 #ifndef REDCODE_H
 #define REDCODE_H
 
-void redcode_encode(FILE *fp);
+int redcode_encode(const FILE *src, const FILE *dst);
 
 #endif

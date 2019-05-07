@@ -7,7 +7,7 @@
 
 #include "redcode.h"
 
-void redcode_encode(FILE *fp)
+int redcode_encode(const FILE *src, const FILE *dst)
 {
-    return;
+    return 0;
 }
