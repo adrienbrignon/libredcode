@@ -10,6 +10,8 @@
 #include "redcode.h"
 
 static const token_t tokens[] = {
+    {".name", 0, {T_NAME}, 0, 0},
+    {".comment", 0, {T_COMMENT}, 0, 0},
     {"live", 1, {T_DIR}, 0x01, 10},
     {"ld", 2, {T_DIR | T_IND, T_REG}, 0x02, 5},
     {"st", 2, {T_REG, T_IND | T_REG}, 0x03, 5},
