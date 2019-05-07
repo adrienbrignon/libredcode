@@ -5,10 +5,10 @@
 ** The library main header.
 */
 
-#include <stdio.h>
-
 #ifndef REDCODE_H
 #define REDCODE_H
+
+#include <stdio.h>
 
 int redcode_encode(const FILE *src, const FILE *dst);
 
