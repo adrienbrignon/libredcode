@@ -37,4 +37,6 @@ typedef struct token {
 
 int redcode_encode(FILE *src, FILE *dst);
 
+const token_t *get_token(const char *str);
+
 #endif

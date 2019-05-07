@@ -11,26 +11,6 @@
 #include "my_string.h"
 #include <stddef.h>
 
-static const token_t tokens[] = {
-    {"live", 1, {T_DIR}, 0x01, 10},
-    {"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 0x0B, 25},
-    {"st", 2, {T_REG, T_IND | T_REG}, 0x03, 5},
-    {"add", 3, {T_REG, T_REG, T_REG}, 0x04, 10},
-    {"sub", 3, {T_REG, T_REG, T_REG}, 0x05, 10},
-    {"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 0x06, 6},
-    {"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x08, 6},
-    {"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x07, 6},
-    {"zjmp", 1, {T_DIR}, 0x09, 20},
-    {"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0A, 25},
-    {"ld", 2, {T_DIR | T_IND, T_REG}, 0x02, 5},
-    {"fork", 1, {T_DIR}, 0x0C, 800},
-    {"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0E, 50},
-    {"lld", 2, {T_DIR | T_IND, T_REG}, 0x0D, 10},
-    {"lfork", 1, {T_DIR}, 0x0F, 1000},
-    {"aff", 1, {T_REG}, 0x10, 2},
-    {NULL, 0, {T_NONE}, 0, 0}
-};
-
 char *my_getline(FILE *src)
 {
     size_t n = 0;
@@ -45,29 +25,12 @@ char *my_getline(FILE *src)
     return NULL;
 }
 
-const token_t *get_token(const char *str)
+argument_t get_argument(char *line)
 {
-    for (int i = 0; tokens[i].name != NULL; i++) {
-        size_t len = my_strlen(tokens[i].name);
+    if (*line == '%' || *line == 'r')
+        return (argument_t) {*line == '%' ? T_DIR : T_REG, line + 1};
 
-        if (my_strncmp(str, tokens[i].name, len) != 0)
-            continue;
-        if (str[len] == ' ')
-            return &tokens[i];
-    }
-
-    return NULL;
-}
-
-char *get_argument(char *line)
-{
-    char *str = NULL;
-    int length = 0;
-    int i = 0;
-
-    for (; str[i] != ' ' && (str[i + 1] != '"' || str[i + 1] != '\0'); i++);
-    printf("=>%d\n", i);
-    return (str);
+    return (argument_t) {T_IND, line};
 }
 
 static int encode_metadata(char *str, FILE *dst, int length)
@@ -105,9 +68,21 @@ static int parse_comment(FILE *src, FILE *dst)
     return (-1);
 }
 
-static int encode_token(const char *str, const token_t *token, FILE *fp)
+static int encode_token(char *str, const token_t *token, FILE *fp)
 {
+    char *tok = NULL;
+    char *start = str + my_strlen(token->name) + 1;
+
     fwrite(&token->code, sizeof token->code, 1, fp);
+
+    tok = my_strtok(start, ", ");
+
+    for (size_t i = 0; tok != NULL; i++) {
+        if ((token->type[i] & get_argument(tok).type) == 0)
+            return -1;
+
+        tok = my_strtok(NULL, ", ");
+    }
 
     return 0;
 }
