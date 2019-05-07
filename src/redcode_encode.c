@@ -5,6 +5,7 @@
 ** Encode a redcode file to an executable.
 */
 
+#include <stdint.h>
 #include <string.h>
 #include "redcode.h"
 #include "my_string.h"
@@ -17,9 +18,8 @@ char *my_getline(FILE *src)
     char *line = NULL;
 
     while (getline(&line, &n, src) >= 0) {
-        if (line != NULL && *line != '\0' && *line != '#') {
+        if (line != NULL && *line != '\0' && *line != '#')
             return line;
-        }
     }
     return NULL;
 }
@@ -27,14 +27,18 @@ char *my_getline(FILE *src)
 argument_t get_argument(char *line)
 {
     if (*line == '%' || *line == 'r')
-        return (argument_t) {*line == '%' ? T_DIR : T_REG, line + 1};
-    return (argument_t) {T_IND, line};
+        return (argument_t) {
+            *line == '%' ? T_DIR : T_REG,
+            *line == '%' ? DIR_SIZE : *line == 'r' ? REG_SIZE : IND_SIZE,
+            line + 1,
+         };
+
+    return (argument_t) {T_IND, IND_SIZE, line};
 }
 
 static int encode_token(char *str, const token_t *token, FILE *fp)
 {
     char *tok = NULL;
-    char n[MAX_ARGS * 2 + 1] = {'\0'};
     char *start = str + my_strlen(token->name) + 1;
 
     fwrite(&token->code, sizeof token->code, 1, fp);
@@ -42,8 +46,17 @@ static int encode_token(char *str, const token_t *token, FILE *fp)
     tok = my_strtok(start, ", ");
 
     for (size_t i = 0; tok != NULL; i++) {
-        if ((token->type[i] & get_argument(tok).type) == 0)
+        argument_t argument = get_argument(tok);
+
+        if ((token->type[i] & argument.type) == 0)
             return -1;
+
+        uint16_t n = my_atoi(argument.value);
+
+        n = ((uint16_t) n >> 8) | ((uint16_t) n << 8);
+
+        fwrite((uint16_t []) {n}, sizeof (uint16_t), 1, fp);
+        printf("%ld: %s\n", argument.size, argument.value);
 
         tok = my_strtok(NULL, ", ");
     }

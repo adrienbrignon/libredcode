@@ -9,6 +9,7 @@
 #define REDCODE_H
 
 #include <stdio.h>
+#include <stddef.h>
 
 #include "config.h"
 
@@ -24,6 +25,7 @@ typedef enum type {
 
 typedef struct argument {
     type_t type;
+    size_t size;
     const char *value;
 } argument_t;
 
