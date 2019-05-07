@@ -37,7 +37,7 @@ char *my_getline(FILE *src)
     char *line = NULL;
 
     while (getline(&line, &n, src) >= 0) {
-        if (line != NULL && *line != '#') {
+        if (line != NULL && *line != '\0' && *line != '#') {
             return line;
         }
     }
@@ -70,7 +70,7 @@ char *get_argument(char *line)
     return (str);
 }
 
-static void encode_metadata(char *str, FILE *dst, int length)
+static int encode_metadata(char *str, FILE *dst, int length)
 {
     char *tmp = NULL;
 
@@ -84,29 +84,26 @@ static void encode_metadata(char *str, FILE *dst, int length)
                 fwrite((int[]) {0}, sizeof(int), 1, dst);
         }
     }
+    return (0);
 }
 
-static int parse_metadata(FILE *src, FILE *dst)
+static int parse_name(FILE *src, FILE *dst)
 {
-    char *line = NULL;
-    int counter = 0;
+    char *line = my_getline(src);
 
-    while ((line = my_getline(src)) != NULL) {
-        if (my_strncmp(line, NAME_STR, my_strlen(NAME_STR)) == 0) {
-            encode_metadata(line, dst, NAME_LENGTH);
-            counter++;
-        }
-        else if (my_strncmp(line, COMMENT_STR, my_strlen(COMMENT_STR)) == 0) {
-            encode_metadata(line, dst, COMMENT_LENGTH);
-            counter++;
-        }
-        if (counter == 2)
-            return (0);
-    }
-    return (counter);
+    if (my_strncmp(line, NAME_STR, my_strlen(NAME_STR)) == 0)
+        return (encode_metadata(line, dst, NAME_LENGTH));
+    return (-1);
 }
 
-static int parse_name(FILE *src, FILE)
+static int parse_comment(FILE *src, FILE *dst)
+{
+    char *line = my_getline(src);
+
+    if (my_strncmp(line, COMMENT_STR, my_strlen(COMMENT_STR)) == 0)
+        return (encode_metadata(line, dst, COMMENT_LENGTH));
+    return (-1);
+}
 
 static int encode_token(const char *str, const token_t *token, FILE *fp)
 {
@@ -120,16 +117,15 @@ int redcode_encode(FILE *src, FILE *dst)
     char *line = NULL;
 
     fwrite((int[]) {REDCODE_HEADER}, sizeof(int), 1, dst);
-    if (parse_metadata(src, dst) != 0)
+    if (parse_name(src, dst) != 0)
+        return -1;
+    if (parse_comment(src, dst) != 0)
         return -1;
     while ((line = my_getline(src)) != NULL) {
         const token_t *token = get_token(line);
-
         if (token == NULL)
             return -1;
-
         encode_token(line, token, dst);
     }
-
     return 0;
 }
