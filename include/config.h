@@ -15,6 +15,8 @@
 #define REG_SIZE (DIR_SIZE)
 
 #define REDCODE_HEADER (0xf383ea00)
+# define PROG_NAME_LENGTH (128)
+# define COMMENT_LENGTH (2048)
 
 #define CHAR_LABEL (':')
 #define CHAR_DIRECT ('%')

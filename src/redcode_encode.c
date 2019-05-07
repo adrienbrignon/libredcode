@@ -9,6 +9,7 @@
 
 #include "redcode.h"
 #include "my_string.h"
+#include <stddef.h>
 
 static const token_t tokens[] = {
     {".name", 0, {T_NAME}, 0, 0},
@@ -53,17 +54,32 @@ token_t *get_token(const char *str)
     return (NULL);
 }
 
-void encode_token(token_t *token, const char *str, FILE *dst)
+void encode_metadata(char *str, FILE *dst, int length)
 {
-    if (my_strcmp(token->name, ".name") == 0) {
-        str = my_strtok(str, " ");
-        while (str != NULL) {
-            str = my_strtok(NULL, " ");
-            if (str != NULL)
-                fwrite(str, sizeof(char), my_strlen(str), dst);
-            printf("=>%s\n", str);
+    char *tmp = NULL;
+
+    str = my_strtok(str, " ");
+    while (str != NULL) {
+        str = my_strtok(NULL, " ");
+        if (str != NULL) {
+            fwrite(str, sizeof(char), my_strlen(str), dst);
+            for (size_t i = 0; i < length - my_strlen(str); i++)
+                fwrite((int[]) {0}, sizeof(int), 1, dst);
         }
-        //fwrite(dst, my_strlen(str));
+    }
+}
+
+void parse_metadata(FILE *src, FILE *dst)
+{
+    char *line = NULL;
+
+    while ((line = my_getline(src)) != NULL) {
+        if (my_strncmp(line, ".name", 5) == 0) {
+            encode_metadata(line, dst, PROG_NAME_LENGTH);
+        }
+        if (my_strncmp(line, ".comment", 8) == 0) {
+            encode_metadata(line, dst, COMMENT_LENGTH);
+        }
     }
 }
 
@@ -72,14 +88,10 @@ int redcode_encode(FILE *src, FILE *dst)
     char *line = NULL;
 
     fwrite((int[]) {REDCODE_HEADER}, sizeof(int), 1, dst);
+    parse_metadata(src, dst);
     while ((line = my_getline(src)) != NULL) {
-        //char *str = my_strtok(line, " ");
-        //while (str != NULL) {
         token_t *token = get_token(line);
         printf("%s\n", line);
-        if (token != NULL)
-            encode_token(token, line, dst);
-        //}
     }
     return (0);
 }
