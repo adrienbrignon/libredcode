@@ -1,4 +1,4 @@
-#include "redcode.h"
+#include "include/redcode.h"
 #include <stdio.h>
 
 int main(int argc, char const *argv[])

@@ -14,7 +14,7 @@
 #define DIR_SIZE (4)
 #define REG_SIZE (DIR_SIZE)
 
-#define REDCODE_HEADER 0x00f383ea
+#define REDCODE_HEADER (0xf383ea00)
 
 #define CHAR_LABEL (':')
 #define CHAR_DIRECT ('%')
