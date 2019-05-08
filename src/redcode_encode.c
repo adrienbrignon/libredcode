@@ -36,6 +36,40 @@ argument_t get_argument(char *line)
     return (argument_t) {T_IND, IND_SIZE, line};
 }
 
+void invert_byte(unsigned int *val)
+{
+	int i = 3;
+	unsigned int revnbr = 0;
+	unsigned int nbr = *val;
+
+	while (i >= 0) {
+		((char*)(&revnbr))[i] = ((char*)(&nbr))[0];
+		nbr = nbr >> 8;
+		i--;
+	}
+	*val = revnbr;
+}
+
+void magic_reverse(void *x)
+{
+	*((char *)x) ^= *(((char *)x) + 3);
+	*(((char *)x) + 3) ^= *((char *)x);
+	*((char *)x) ^= *(((char *)x) + 3);
+	*(((char *)x) + 1) ^= *(((char *)x) + 2);
+	*(((char *)x) + 2) ^= *(((char *)x) + 1);
+	*(((char *)x) + 1) ^= *(((char *)x) + 2);
+}
+
+void the_magic_reverse(void *x, int size)
+{
+	for (int i = 0 ; i <= (size - 1) / 2 ; i++) {
+		*(((char *)x) + i) ^= *(((char *)x) + (size - 1 - i));
+		*(((char *)x) + (size - 1 - i)) ^= *(((char *)x) + i);
+		*(((char *)x) + i) ^= *(((char *)x) + (size - 1 - i));
+	}
+}
+
+
 static int encode_token(char *str, const token_t *token, FILE *fp)
 {
     char *tok = NULL;
@@ -50,14 +84,13 @@ static int encode_token(char *str, const token_t *token, FILE *fp)
 
         if ((token->type[i] & argument.type) == 0)
             return -1;
-
-        uint16_t n = my_atoi(argument.value);
-
-        n = ((uint16_t) n >> 8) | ((uint16_t) n << 8);
-
-        fwrite((uint16_t []) {n}, sizeof (uint16_t), 1, fp);
+        // int n = ((uint16_t) n >> 8) | ((uint16_t) n << 8);
+        unsigned int tmp = my_atoi(argument.value);
+        the_magic_reverse(&tmp, argument.size);
+        printf("->%d\n", tmp);
+        printf("=>%ld\n", argument.size);
+        fwrite(&tmp, sizeof (char), argument.size, fp);
         printf("%ld: %s\n", argument.size, argument.value);
-
         tok = my_strtok(NULL, ", ");
     }
 
