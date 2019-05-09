@@ -33,9 +33,7 @@ const token_t *get_token(const char *str)
     for (int i = 0; tokens[i].name != NULL; i++) {
         size_t len = my_strlen(tokens[i].name);
 
-        if (my_strncmp(str, tokens[i].name, len) != 0)
-            continue;
-        if (str[len] == ' ')
+        if (my_strncmp(str, tokens[i].name, len) == 0 && str[len] == ' ')
             return &tokens[i];
     }
 

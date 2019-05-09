@@ -8,14 +8,14 @@
 #include "redcode.h"
 #include "my_string.h"
 
-int parse_comment(FILE *src, FILE *dst)
+int parse_comment(parser_t *parser)
 {
     char *line = NULL;
-
-    readfile(src, &line);
-
+    if (readfile(parser->src, &line) < 0)
+        return -1;
+    if (readfile(parser->src, &line) < 0)
+        return -1;
     if (my_strncmp(line, COMMENT_STR, my_strlen(COMMENT_STR)) == 0)
-        return (encode_metadata(line, dst, COMMENT_LENGTH));
-
+        return encode_comment(parser, line, parser->dest);
     return -1;
 }

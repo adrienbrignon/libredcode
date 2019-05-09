@@ -7,14 +7,14 @@
 
 #include "redcode.h"
 
-ssize_t readfile(FILE *fp, char **ptr)
+__ssize_t readfile(FILE *fp, char **ptr)
 {
     size_t n = 0;
-    ssize_t len = 0;
+    __ssize_t len = 0;
 
     if ((len = getline(ptr, &n, fp)) == EOF)
         return len;
-    if (**ptr == '#')
+    if (**ptr == '\n' || **ptr == '\0' || **ptr == '#')
         return readfile(fp, ptr);
 
     (*ptr)[len - 1] = '\0';

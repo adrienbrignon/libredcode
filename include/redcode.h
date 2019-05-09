@@ -23,10 +23,17 @@ typedef enum type {
     T_COMMENT = 1 << 5
 } type_t;
 
+typedef struct parser {
+    off_t offset;
+    size_t size;
+    FILE *src;
+    FILE *dest;
+} parser_t;
+
 typedef struct argument {
     type_t type;
     size_t size;
-    const char *value;
+    const void *value;
 } argument_t;
 
 typedef struct token {
@@ -39,11 +46,15 @@ typedef struct token {
 
 int redcode_encode(FILE *src, FILE *dst);
 
-int parse_comment(FILE *src, FILE *dst);
-int parse_name(FILE *src, FILE *dst);
-int encode_metadata(char *str, FILE *dst, int length);
+int parse_name(parser_t *parser);
+int encode_name(parser_t *parser, char *str, FILE *dst);
+int parse_comment(parser_t *parser);
+int encode_comment(parser_t *parser, char *str, FILE *dst);
+int parse_size(parser_t *parser);
 
 ssize_t readfile(FILE *fp, char **ptr);
+
+size_t redcode_write(parser_t *p, const void *ptr, size_t size, size_t nmemb);
 
 const token_t *get_token(const char *str);
 

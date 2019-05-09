@@ -2,20 +2,20 @@
 ** EPITECH PROJECT, 2019
 ** corewar
 ** File description:
-** parse_name
+** parse_comment
 */
 
 #include "redcode.h"
 #include "my_string.h"
 
-int parse_name(FILE *src, FILE *dst)
+int parse_name(parser_t *parser)
 {
     char *line = NULL;
 
-    readfile(src, &line);
-
+    if (readfile(parser->src, &line) < 0)
+        return -1;
     if (my_strncmp(line, NAME_STR, my_strlen(NAME_STR)) == 0)
-        return (encode_metadata(line, dst, NAME_LENGTH));
+        return encode_name(parser, line, parser->dest);
 
     return -1;
 }
