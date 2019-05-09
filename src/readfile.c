@@ -14,7 +14,7 @@ ssize_t readfile(FILE *fp, char **ptr)
 
     if ((len = getline(ptr, &n, fp)) == EOF)
         return len;
-    if (**ptr == '\n' || **ptr == '#')
+    if (**ptr == '\n' || **ptr == '\0' || **ptr == '#')
         return readfile(fp, ptr);
 
     (*ptr)[len - 1] = '\0';
