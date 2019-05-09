@@ -6,6 +6,7 @@
 */
 
 #include <limits.h>
+#include <byteswap.h>
 
 #include "config.h"
 #include "redcode.h"
@@ -13,11 +14,11 @@
 
 static void pad(FILE *dst, size_t length)
 {
-    for (size_t i = 1; i < length; i++)
+    for (size_t i = 0; i < length; i++)
         fwrite((char []) {0}, sizeof (char), 1, dst);
 }
 
-int encode_metadata(char *str, FILE *dst, size_t length)
+int encode_comment(char *str, FILE *dst)
 {
     size_t len = 0;
     char *value = NULL;
@@ -32,12 +33,9 @@ int encode_metadata(char *str, FILE *dst, size_t length)
     if (len == 0 || value[0] != '"' || value[len - 1] != '"')
         return -1;
 
-    printf("%ld\n", len - 2);
-
-    fwrite((int []) {(int) len - 1}, sizeof(int), 1, dst);
-    fwrite(value + 1, 1, len - 2, dst);
-
-    pad(dst, length - ((len - 2) * CHAR_BIT));
+    fwrite((int []) {bswap_32(len - 2)}, sizeof (int), 1, dst);
+    fwrite(value + 1, sizeof (char), len - 2, dst);
+    pad(dst, COMMENT_LENGTH - ((len - 2) * CHAR_BIT));
 
     return 0;
 }
