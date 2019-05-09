@@ -15,10 +15,7 @@
 
 static char *get_binary(int type1, int type2, int type3)
 {
-    char *binary = NULL;
-
-    if ((binary = malloc(sizeof(char) * (8 * 4) + 1)) == NULL)
-        return NULL;
+    static char binary[(8 * 4 + 1)] = {0};
 
     my_itoa(type1, binary, 2);
     my_itoa(type2, binary + my_strlen(binary), 2);
@@ -31,20 +28,16 @@ static char *get_binary(int type1, int type2, int type3)
 
 static char *get_hexa(char *binary)
 {
-    char *hex = NULL;
     unsigned int result = 0;
+    static char hexa[2] = {0};
     int len = my_strlen(binary);
 
-    if ((hex = malloc(sizeof(char) * 3)) == NULL)
-        return NULL;
-
     for (int counter = 0; counter < len; counter++)
-        result += ((binary[len - counter - 1] - '0') * pow(2, counter));
+        result += ((binary[len - counter - 1] - '0') * my_pow(2, counter));
 
-    free(binary);
-    my_itoa(result, hex, 16);
+    my_itoa(result, hexa, 16);
 
-    return hex;
+    return hexa;
 }
 
 static unsigned int get_power(int number)
@@ -54,7 +47,7 @@ static unsigned int get_power(int number)
     if (number == 1)
         return 1;
 
-    while (pow(2, counter) != number)
+    while (my_pow(2, counter) != number)
         counter++;
 
     return counter + 1;
