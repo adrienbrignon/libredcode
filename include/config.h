@@ -12,16 +12,20 @@
 
 #define MAX_ARGS (4)
 
-#define REG_SIZE (1)
 #define IND_SIZE (2)
+
+#define REG_SIZE (1)
+#define REG_CHAR ('r')
+#define REG_COUNT (16)
+
 #define DIR_SIZE (4)
+#define DIR_CHAR ('%')
 
-#define CHAR_LABEL (':')
-#define CHAR_DIRECT ('%')
-#define CHAR_COMMENT ('#')
-#define CHAR_SEPARATOR (',')
+#define LAB_CHAR (':')
+#define COMMENT_CHAR ('#')
+#define SEPARATOR_CHAR (',')
 
-#define CHARS_LABEL ("abcdefghijklmnopqrstuvwxyz_0123456788")
+#define LAB_CHARS ("abcdefghijklmnopqrstuvwxyz_0123456788")
 
 #define NAME_STR (".name")
 #define NAME_LENGTH (128)

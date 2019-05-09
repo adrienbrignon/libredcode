@@ -26,7 +26,7 @@ typedef enum type {
 typedef struct argument {
     type_t type;
     size_t size;
-    const char *value;
+    const void *value;
 } argument_t;
 
 typedef struct token {
@@ -39,9 +39,9 @@ typedef struct token {
 
 int redcode_encode(FILE *src, FILE *dst);
 
-int parse_comment(FILE *src, FILE *dst);
 int parse_name(FILE *src, FILE *dst);
-int encode_metadata(char *str, FILE *dst, int length);
+int parse_comment(FILE *src, FILE *dst);
+int encode_metadata(char *str, FILE *dst, size_t length);
 
 ssize_t readfile(FILE *fp, char **ptr);
 
