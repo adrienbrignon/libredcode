@@ -8,13 +8,14 @@
 #include "redcode.h"
 #include "my_string.h"
 
-int parse_name(parser_t *parser, FILE *src, FILE *dst)
+int parse_name(parser_t *parser)
 {
     char *line = NULL;
-    if (readfile(src, &line) < 0)
+
+    if (readfile(parser->src, &line) < 0)
         return -1;
     if (my_strncmp(line, NAME_STR, my_strlen(NAME_STR)) == 0)
-        return encode_name(parser, line, dst);
+        return encode_name(parser, line, parser->dest);
 
     return -1;
 }

@@ -33,9 +33,8 @@ int encode_comment(parser_t *parser, char *str, FILE *dst)
     if (len == 0 || value[0] != '"' || value[len - 1] != '"')
         return -1;
 
-    redcode_write(parser, (int []) {bswap_32(len - 2)}, sizeof (int), 1);
     redcode_write(parser, value + 1, sizeof (char), len - 2);
-    pad(parser, dst, COMMENT_LENGTH - ((len - 2) * CHAR_BIT));
+    pad(parser, dst, (COMMENT_LENGTH - 4) - ((len - 2) * CHAR_BIT));
 
     return 0;
 }

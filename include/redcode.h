@@ -46,10 +46,11 @@ typedef struct token {
 
 int redcode_encode(FILE *src, FILE *dst);
 
-int parse_name(parser_t *parser, FILE *src, FILE *dst);
+int parse_name(parser_t *parser);
 int encode_name(parser_t *parser, char *str, FILE *dst);
-int parse_comment(parser_t *parser, FILE *src, FILE *dst);
+int parse_comment(parser_t *parser);
 int encode_comment(parser_t *parser, char *str, FILE *dst);
+int parse_size(parser_t *parser);
 
 ssize_t readfile(FILE *fp, char **ptr);
 
