@@ -13,20 +13,31 @@
 #include "redcode.h"
 #include "my.h"
 
-static char *get_binary(int type1, int type2, int type3)
+static char *recup_binary(int type)
+{
+    if (my_pow(2, type) == T_REG)
+        return "01";
+    if (my_pow(2, type) == T_DIR)
+        return "10";
+    if (my_pow(2, type) == T_IND)
+        return "11";
+
+    return "00";
+}
+
+static char *get_binary(int t1, int t2, int t3)
 {
     static char binary[(8 * 4 + 1)] = {0};
 
-    my_itoa(type1, binary, 2);
-    my_itoa(type2, binary + my_strlen(binary), 2);
-    my_itoa(type3, binary + my_strlen(binary), 2);
-    my_itoa(0, binary + my_strlen(binary), 2);
-    my_itoa(0, binary + my_strlen(binary), 2);
+    my_strcat(binary, recup_binary(t1));
+    my_strcat(binary, recup_binary(t2));
+    my_strcat(binary, recup_binary(t3));
+    my_strcat(binary, recup_binary(-1));
 
     return binary;
 }
 
-static char *get_hexa(char *binary)
+static char *get_hexa(const char *binary)
 {
     unsigned int result = 0;
     static char hexa[2] = {0};
@@ -45,12 +56,12 @@ static unsigned int get_power(int number)
     int counter = 0;
 
     if (number == 1)
-        return 1;
+        return 0;
 
     while (my_pow(2, counter) != number)
         counter++;
 
-    return counter + 1;
+    return counter;
 }
 
 char *encode_type(int type1, int type2, int type3)
