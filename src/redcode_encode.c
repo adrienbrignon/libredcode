@@ -41,9 +41,11 @@ int redcode_encode(FILE *src, FILE *dst)
 
     redcode_write(&parser, (int []) {REDCODE_HEADER}, sizeof(int), 1);
 
-    if (parse_name(&parser, src, dst) < 0)
+    if (parse_name(&parser) < 0)
         return -1;
-    if (parse_comment(&parser, src, dst) < 0)
+    if (parse_size(&parser) < 0)
+        return -1;
+    if (parse_comment(&parser) < 0)
         return -1;
 
     while (readfile(src, &line) >= 0) {
@@ -55,6 +57,7 @@ int redcode_encode(FILE *src, FILE *dst)
         encode(&parser, line, token);
     }
 
+    redcode_write(&parser, (off_t []) {parser.offset}, sizeof parser.offset, 1);
     printf("%ld\n", parser.offset);
 
     return 0;

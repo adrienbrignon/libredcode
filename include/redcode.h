@@ -25,6 +25,7 @@ typedef enum type {
 
 typedef struct parser {
     off_t offset;
+    size_t size;
     FILE *src;
     FILE *dest;
 } parser_t;
