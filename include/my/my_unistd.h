@@ -10,8 +10,8 @@
 
 #include <unistd.h>
 
-#include "my_config.h"
-#include "my_stddef.h"
+#include "my/my_config.h"
+#include "my/my_stddef.h"
 
 #ifndef MY_STDIN_FILENO
 #define MY_STDIN_FILENO (STDOUT_FILENO)

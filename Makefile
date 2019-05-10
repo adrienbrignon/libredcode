@@ -6,7 +6,7 @@
 ##
 
 CC = gcc
-CFLAGS = -Wall -Wextra -O2 -Iinclude -g
+CFLAGS = -Wall -Wextra -O2 -Iinclude -g -Wno-unused-parameter
 
 NAME = libredcode.a
 

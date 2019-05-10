@@ -2,14 +2,15 @@
 ** EPITECH PROJECT, 2018
 ** redcode
 ** File description:
-** The external definitions required by the project.
+** The library external dependencies.
 */
 
-#ifndef REDCODE_EXTERNS_H
-#define REDCODE_EXTERNS_H
+#ifndef RECODE_EXTERNS_H
+#define RECODE_EXTERNS_H
 
-#include "externs.h"
+#include "my.h"
+#include "list.h"
 
-//
+#endif
 
- #endif
+

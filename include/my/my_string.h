@@ -8,8 +8,8 @@
 #ifndef MY_STRING_H
 #define MY_STRING_H
 
-#include "my_config.h"
-#include "my_stddef.h"
+#include "my/my_config.h"
+#include "my/my_stddef.h"
 
 MY_API int my_strcmp(const char *str1, const char *str2);
 MY_API int my_memcmp(const void *ptr1, const void *ptr2, my_size_t n);

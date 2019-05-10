@@ -8,7 +8,7 @@
 #ifndef MY_CTYPE_H
 #define MY_CTYPE_H
 
-#include "my_config.h"
+#include "my/my_config.h"
 
 MY_API int my_isalnum(char c);
 MY_API int my_isdigit(char c);

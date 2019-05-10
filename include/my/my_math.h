@@ -8,7 +8,7 @@
 #ifndef MY_MATH_H
 #define MY_MATH_H
 
-#include "my_config.h"
+#include "my/my_config.h"
 
 MY_API int my_isprime(int x);
 

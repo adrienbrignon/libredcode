@@ -10,7 +10,7 @@
 
 #include <stdarg.h>
 
-#include "my_config.h"
+#include "my/my_config.h"
 
 #ifndef MY_PRINTF_CALLBACK
 #define MY_PRINTF_CALLBACK(x) (my_printf_callback_ ## x)

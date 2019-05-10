@@ -8,8 +8,8 @@
 #ifndef MY_STDLIB_H
 #define MY_STDLIB_H
 
-#include "my_config.h"
-#include "my_stddef.h"
+#include "my/my_config.h"
+#include "my/my_stddef.h"
 
 typedef struct my_div {
     int quot;
