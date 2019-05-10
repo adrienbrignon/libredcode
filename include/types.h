@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stddef.h>
 
+#include "list.h"
 #include "config.h"
 
 typedef struct parser {
@@ -18,7 +19,13 @@ typedef struct parser {
 
     FILE *in;
     FILE *out;
+    list_t *labels;
 } parser_t;
+
+typedef struct label {
+    const char *name;
+    off_t offset;
+} label_t;
 
 typedef enum type {
     T_UNK = 0,

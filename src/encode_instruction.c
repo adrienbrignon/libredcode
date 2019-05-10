@@ -39,6 +39,15 @@ int encode_instruction(parser_t *parser, instruction_t *ins)
 
     coding_byte(parser, ins);
 
+    for (size_t i = 0; i < ins->mnemonic.argc; i++) {
+        if (ins->argv[i].size == 1)
+            redcode_write(parser, (uint8_t []) {my_atoi(ins->argv[i].value)}, sizeof (uint8_t), 1);
+        if (ins->argv[i].size == 2)
+            redcode_write(parser, (uint16_t []) {__bswap_16(my_atoi(ins->argv[i].value))}, sizeof (uint16_t), 1);
+        if (ins->argv[i].size == 4)
+            redcode_write(parser, (uint32_t []) {__bswap_32(my_atoi(ins->argv[i].value))}, sizeof (uint32_t), 1);
+    }
+
     return 0;
 }
 
