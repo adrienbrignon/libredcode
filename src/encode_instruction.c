@@ -36,7 +36,6 @@ static char *coding_byte(parser_t *parser, instruction_t *ins)
 int encode_instruction(parser_t *parser, instruction_t *ins)
 {
     redcode_write(parser, (char []) {ins->mnemonic.code}, 1, 1);
-
     coding_byte(parser, ins);
 
     for (size_t i = 0; i < ins->mnemonic.argc; i++) {

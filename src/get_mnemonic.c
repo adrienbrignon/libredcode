@@ -10,7 +10,7 @@
 
 static const mnemonic_t mnemonics[] = {
     {"live", 1, {T_DIR}, 0x01, 10},
-    {"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 0x0b, 25},
+    {"sti", 3, {T_REG, T_REG | T_DIR | T_IND | T_SPE, T_DIR | T_REG | T_SPE}, 0x0b, 25},
     {"st", 2, {T_REG, T_IND | T_REG}, 0x03, 5},
     {"add", 3, {T_REG, T_REG, T_REG}, 0x04, 10},
     {"sub", 3, {T_REG, T_REG, T_REG}, 0x05, 10},

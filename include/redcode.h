@@ -10,6 +10,8 @@
 
 #include "types.h"
 
+int parse_size(parser_t *parser);
+int parser_reset(parser_t *parser);
 int redcode_header(parser_t *parser);
 int redcode_encode(FILE *src, FILE *dst);
 int encode_instruction(parser_t *parser, instruction_t *instruction);
@@ -20,7 +22,7 @@ ssize_t readfile(FILE *fp, char **ptr);
 
 mnemonic_t get_mnemonic(const char *str);
 
-argument_t get_argument(const char *str);
+argument_t get_argument(unsigned int types, const char *str);
 
 instruction_t parse_instruction(parser_t *parser, char *line);
 

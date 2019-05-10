@@ -32,7 +32,8 @@ typedef enum type {
     T_REG = 1 << 0,
     T_DIR = 1 << 1,
     T_IND = 1 << 2,
-    T_LAB = 1 << 3
+    T_LAB = 1 << 3,
+    T_SPE = 1 << 4
 } type_t;
 
 typedef struct argument {
