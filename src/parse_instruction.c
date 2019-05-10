@@ -5,6 +5,8 @@
 ** Get instruction at the given line.
 */
 
+#include <stdlib.h>
+
 #include "redcode.h"
 #include "my/my_string.h"
 
@@ -25,21 +27,29 @@ static int get_arguments(parser_t *parser, instruction_t *ins, char *line)
         arg = my_strtok(NULL, (char []) {SEPARATOR_CHAR, '\0'});
     }
 
-    printf("%ld\n", ins->size);
-
     return 0;
 }
 
-instruction_t parse_instruction(parser_t *parser, char *line)
+instruction_t *parse_instruction(parser_t *parser, char *str)
 {
-    instruction_t ins = {0};
+    instruction_t *ins = NULL;
+    size_t len = my_strcspn(str, (char []) {LAB_CHAR, '\0'});
 
-    ins.mnemonic = get_mnemonic(line);
+    if ((ins = malloc(sizeof *ins)) == NULL)
+        return NULL;
+    if (str[len] == ':' && (str[len + 1] == ' ' || str[len + 1] == '\0'))
+        if ((ins->label = my_strndup(str, len)) == NULL)
+            return NULL;
 
-    if (ins.mnemonic.name == NULL)
+    ins->mnemonic = get_mnemonic(ins->label ? str + len + 1 : str);
+
+    if (ins->mnemonic.name == NULL)
         return ins;
-    if (get_arguments(parser, &ins, line) < 0)
-        return ins;
+
+    get_arguments(parser, ins, str);
+
+    parser->size = parser->size + ins->size + 2;
+    ins->offset = parser->size;
 
     return ins;
 }

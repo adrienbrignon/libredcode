@@ -6,6 +6,7 @@
 */
 
 #include "redcode.h"
+#include "my/my_ctype.h"
 #include "my/my_string.h"
 
 static const mnemonic_t mnemonics[] = {
@@ -17,10 +18,10 @@ static const mnemonic_t mnemonics[] = {
     {"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 0x06, 6},
     {"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x08, 6},
     {"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x07, 6},
-    {"zjmp", 1, {T_DIR}, 0x09, 20},
-    {"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0a, 25},
+    {"zjmp", 1, {T_DIR | T_SPE}, 0x09, 20},
+    {"ldi", 3, {T_REG | T_DIR | T_IND | T_SPE, T_DIR | T_REG | T_SPE, T_REG}, 0x0a, 25},
     {"ld", 2, {T_DIR | T_IND, T_REG}, 0x02, 5},
-    {"fork", 1, {T_DIR}, 0x0c, 800},
+    {"fork", 1, {T_DIR | T_SPE}, 0x0c, 800},
     {"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0e, 50},
     {"lld", 2, {T_DIR | T_IND, T_REG}, 0x0d, 10},
     {"lfork", 1, {T_DIR}, 0x0f, 1000},
@@ -30,6 +31,8 @@ static const mnemonic_t mnemonics[] = {
 
 mnemonic_t get_mnemonic(const char *str)
 {
+    while (my_isspace(*str))
+        str++;
     for (int i = 0; mnemonics[i].name != NULL; i++) {
         size_t len = my_strlen(mnemonics[i].name);
 

@@ -15,17 +15,22 @@
 #include "config.h"
 
 typedef struct parser {
-    off_t offset;
-
     FILE *in;
     FILE *out;
-    list_t *labels;
+    list_t *instructions;
+    list_t *directives;
+    size_t size;
 } parser_t;
 
 typedef struct label {
     const char *name;
     off_t offset;
 } label_t;
+
+typedef struct directive {
+    const char *name;
+    const char *value;
+} directive_t;
 
 typedef enum type {
     T_UNK = 0,
@@ -52,6 +57,8 @@ typedef struct mnemonic {
 
 typedef struct instruction {
     size_t size;
+    off_t offset;
+    const char *label;
     mnemonic_t mnemonic;
     argument_t argv[MAX_ARGS];
 } instruction_t;

@@ -14,7 +14,7 @@
 #include "my/my_string.h"
 #include "my/my_stdlib.h"
 
-static char *coding_byte(parser_t *parser, instruction_t *ins)
+static void coding_byte(parser_t *parser, instruction_t *ins)
 {
     char byte[CHAR_BIT + 1] = {0};
 
@@ -28,9 +28,7 @@ static char *coding_byte(parser_t *parser, instruction_t *ins)
     }
 
     my_strcat(byte, "00");
-    redcode_write(parser, (char []) {strtol(byte, NULL, 2)}, 1, 1);
-
-    return NULL;
+    redcode_write(parser, (uint8_t []) {strtol(byte, NULL, 2)}, 1, 1);
 }
 
 int encode_instruction(parser_t *parser, instruction_t *ins)
@@ -40,11 +38,11 @@ int encode_instruction(parser_t *parser, instruction_t *ins)
 
     for (size_t i = 0; i < ins->mnemonic.argc; i++) {
         if (ins->argv[i].size == 1)
-            redcode_write(parser, (uint8_t []) {my_atoi(ins->argv[i].value)}, sizeof (uint8_t), 1);
+            redcode_write(parser, ENCODE_8(ins->argv[i].value), 1, 1);
         if (ins->argv[i].size == 2)
-            redcode_write(parser, (uint16_t []) {__bswap_16(my_atoi(ins->argv[i].value))}, sizeof (uint16_t), 1);
+            redcode_write(parser, ENCODE_16(ins->argv[i].value), 2, 1);
         if (ins->argv[i].size == 4)
-            redcode_write(parser, (uint32_t []) {__bswap_32(my_atoi(ins->argv[i].value))}, sizeof (uint32_t), 1);
+            redcode_write(parser, ENCODE_32(ins->argv[i].value), 4, 1);
     }
 
     return 0;

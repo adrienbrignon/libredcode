@@ -27,10 +27,10 @@
 
 #define LAB_CHARS ("abcdefghijklmnopqrstuvwxyz_0123456788")
 
-#define NAME_STR (".name")
+#define NAME_STR ("name")
 #define NAME_LENGTH (128)
 
-#define COMMENT_STR (".comment")
+#define COMMENT_STR ("comment")
 #define COMMENT_LENGTH (2048)
 
 #endif

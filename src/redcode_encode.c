@@ -5,23 +5,80 @@
 ** Encode a redcode file to an executable.
 */
 
+#include <stdint.h>
+#include <stdlib.h>
+
 #include "redcode.h"
+#include "my/my_ctype.h"
+#include "my/my_string.h"
+
+static int encode_instructions(parser_t *parser)
+{
+    node_t *node = parser->instructions->first;
+
+    while (node != NULL) {
+        instruction_t *ins = node->data;
+
+        if (ins->mnemonic.name != NULL)
+            encode_instruction(parser, ins);
+
+        node = node->next;
+    }
+
+    return 0;
+}
+
+static int encode_header(parser_t *parser)
+{
+    directive_t *name = get_directive(parser, "name");
+    directive_t *comment = get_directive(parser, "comment");
+
+    if (name == NULL || comment == NULL)
+        return -1;
+
+    redcode_write(parser, (uint32_t []) {REDCODE_HEADER}, 4, 1);
+    redcode_write(parser, name->value, 1, my_strlen(name->value));
+
+    for (size_t i = 0; i < NAME_LENGTH; i++)
+        redcode_write(parser, (uint8_t []) {0}, 1, 1);
+
+    redcode_write(parser, (uint32_t []) {__bswap_32(parser->size)}, 4, 1);
+    redcode_write(parser, comment->value, 1, my_strlen(comment->value));
+
+    for (size_t i = 0; i < (COMMENT_LENGTH - sizeof (int)); i++)
+        redcode_write(parser, (uint8_t []) {0}, 1, 1);
+
+    return 0;
+}
+
+static int encode(parser_t *parser)
+{
+    encode_header(parser);
+    encode_instructions(parser);
+
+    return 0;
+}
 
 int redcode_encode(FILE *src, FILE *dst)
 {
     char *line = NULL;
-    parser_t parser = {0, src, dst};
+    parser_t parser = {src, dst, new_list(), new_list(), 0};
 
-    redcode_header(&parser);
-
+    if (parser.instructions == NULL || parser.directives == NULL)
+        return -1;
     while (readfile(src, &line) >= 0) {
-        instruction_t instruction = parse_instruction(&parser, line);
+        instruction_t *ins = NULL;
+        directive_t *directive = NULL;
 
-        if (instruction.mnemonic.name == NULL)
+        if ((ins = parse_instruction(&parser, line)) == NULL)
             return -1;
-
-        encode_instruction(&parser, &instruction);
+        if (ins->mnemonic.name != NULL || ins->label != NULL)
+            list_push(parser.instructions, ins);
+        else if ((directive = parse_directive(line)) != NULL)
+            list_push(parser.directives, directive);
     }
+
+    encode(&parser);
 
     return 0;
 }

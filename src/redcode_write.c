@@ -9,7 +9,5 @@
 
 size_t redcode_write(parser_t *parser, const void *ptr, size_t size, size_t n)
 {
-    parser->offset += n * size;
-
     return fwrite(ptr, size, n, parser->out);
 }
