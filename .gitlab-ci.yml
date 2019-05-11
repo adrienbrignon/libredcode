@@ -1,0 +1,20 @@
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  image: gcc
+  artifacts:
+    paths:
+      - include
+      - libredcode.a
+  script:
+    - make
+
+norm:
+  stage: test
+  image: adrienbrignon/epitech-c
+  allow_failure: yes
+  script:
+    - normez -u
