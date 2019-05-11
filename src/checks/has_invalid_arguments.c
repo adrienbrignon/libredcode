@@ -12,13 +12,15 @@ int has_invalid_arguments(parser_t *parser)
     node_t *node = parser->instructions->first;
 
     while (node != NULL) {
-        instruction_t *instruction = node->data;
+        instruction_t *ins = node->data;
 
-        for (size_t i = 0; i < instruction->mnemonic.argc; i++) {
-            if (instruction->argv[i].value == NULL)
+        for (size_t i = 0; i < ins->mnemonic.argc; i++) {
+            if (ins->argv[i].value == NULL)
                 return 1;
-            if ((instruction->argv[i].type & T_LAB) == T_LAB) {
-                if (find_label(parser, instruction->argv[i].value) == NULL)
+            if ((ins->mnemonic.argv[i] & ins->argv[i].type) == 0)
+                return 1;
+            if ((ins->argv[i].type & T_LAB) == T_LAB) {
+                if (find_label(parser, ins->argv[i].value) == NULL)
                     return 1;
             }
         }
