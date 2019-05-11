@@ -14,6 +14,17 @@
 #include "my/my_string.h"
 #include "my/my_stdlib.h"
 
+static uint8_t get_dec(const char *binary)
+{
+    uint8_t result = 0;
+    size_t len = my_strlen(binary);
+
+    for (int counter = 0; counter < len; counter++)
+        result += ((binary[len - counter - 1] - '0') * my_pow(2, counter));
+
+    return result;
+}
+
 static void coding_byte(parser_t *parser, instruction_t *ins)
 {
     size_t i;
@@ -33,7 +44,7 @@ static void coding_byte(parser_t *parser, instruction_t *ins)
     for (; i < 4; i++)
         my_strcat(byte, "00");
 
-    WRITE(parser, (uint8_t []) {strtol(byte, NULL, 2)}, 1, 1);
+    WRITE(parser, (uint8_t []) {get_dec(byte)}, 1, 1);
 }
 
 static int encode_label(parser_t *parser, instruction_t *ins, size_t i)
