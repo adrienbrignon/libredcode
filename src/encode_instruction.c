@@ -19,7 +19,7 @@ static uint8_t get_dec(const char *binary)
     uint8_t result = 0;
     size_t len = my_strlen(binary);
 
-    for (int counter = 0; counter < len; counter++)
+    for (size_t counter = 0; counter < len; counter++)
         result += ((binary[len - counter - 1] - '0') * my_pow(2, counter));
 
     return result;
