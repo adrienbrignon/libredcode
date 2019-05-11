@@ -47,13 +47,12 @@ instruction_t *parse_instruction(parser_t *parser, char *str)
 
     ins->mnemonic = get_mnemonic(ins->label ? str + len + 1 : str);
 
-    if (ins->mnemonic.name == NULL)
-        return ins;
-
     get_arguments(parser, ins, str);
 
     ins->offset = parser->size;
-    parser->size = parser->size + ins->size + 1 + ins->mnemonic.coding_byte;
+
+    if (ins->mnemonic.name != NULL)
+        parser->size = parser->size + ins->size + 1 + ins->mnemonic.coding_byte;
 
     return ins;
 }

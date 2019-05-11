@@ -14,17 +14,6 @@
 #include "my/my_string.h"
 #include "my/my_stdlib.h"
 
-static char to_dec(const char *binary)
-{
-    char result = 0;
-    int len = my_strlen(binary);
-
-    for (int counter = 0; counter < len; counter++)
-        result += ((binary[len - counter - 1] - '0') * my_pow(2, counter));
-
-    return result;
-}
-
 static void coding_byte(parser_t *parser, instruction_t *ins)
 {
     size_t i;
@@ -52,14 +41,9 @@ static int encode_label(parser_t *parser, instruction_t *ins, size_t i)
     instruction_t *label = find_label(parser, ins->argv[i].value);
 
     if (label == NULL)
-        return (-1);
-    if (ins->offset > label->offset) {
-        WRITE(parser, (uint8_t []) {0xff}, 1, 1);
-        WRITE(parser, (uint8_t []) {256 - (ins->offset - label->offset)}, 1, 1);
-    } else {
-        WRITE(parser, (uint8_t []) {0}, 1, 1);
-        WRITE(parser, (uint8_t []) {(label->offset - ins->offset)}, 1, 1);
-    }
+        return -1;
+
+    WRITE(parser, (uint16_t []) {SWAP_16(label->offset - ins->offset)}, 2, 1);
 
     return (0);
 }

@@ -10,10 +10,13 @@
 
 #include "types.h"
 
+#define SWAP_16(x) (__bswap_16(x))
+#define SWAP_32(x) (__bswap_32(x))
 #define ENCODE_8(val) ((uint8_t []) {my_atoi(val)})
-#define ENCODE_16(val) ((uint16_t []) {__bswap_16(my_atoi(val))})
-#define ENCODE_32(val) ((uint32_t []) {__bswap_32(my_atoi(val))})
+#define ENCODE_16(val) ((uint16_t []) {SWAP_16(my_atoi(val))})
+#define ENCODE_32(val) ((uint32_t []) {SWAP_32(my_atoi(val))})
 #define WRITE(parser, ptr, size, n) (fwrite(ptr, size, n, parser->out))
+
 
 int parse_size(parser_t *parser);
 int parser_reset(parser_t *parser);
