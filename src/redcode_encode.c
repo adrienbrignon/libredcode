@@ -73,6 +73,10 @@ int redcode_encode(FILE *src, FILE *dst)
             list_push(parser.instructions, ins);
         else if ((directive = parse_directive(line)) != NULL)
             list_push(parser.directives, directive);
+        else {
+            printf("Invalid instruction.\n");
+            return -1;
+        }
     }
 
     encode(&parser);

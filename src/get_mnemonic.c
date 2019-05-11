@@ -37,7 +37,7 @@ mnemonic_t get_mnemonic(const char *str)
     for (int i = 0; mnemonics[i].name != NULL; i++) {
         size_t len = my_strlen(mnemonics[i].name);
 
-        if (my_strncmp(str, mnemonics[i].name, len) == 0 && str[len] == ' ')
+        if (my_strncmp(str, mnemonics[i].name, len) == 0 && (str[len] == ' ' || str[len] == '\0'))
             return mnemonics[i];
     }
 
