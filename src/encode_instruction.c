@@ -38,20 +38,14 @@ static int encode_label(parser_t *parser, instruction_t *ins, size_t i)
 
     if (label == NULL)
         return (-1);
-    
-    printf("%ld\n", label->offset);
-    printf("%s\n", ins->mnemonic.name);
-    printf("%ld\n", ins->offset);
     if (ins->offset > label->offset) {
         WRITE(parser, (uint8_t []) {0xff}, 1, 1);
-        WRITE(parser, (uint8_t []) {255 - (ins->offset - label->offset)}, 1, 1);
-        
+        WRITE(parser, (uint8_t []) {256 - (ins->offset - label->offset)}, 1, 1);
     } else {
         WRITE(parser, (uint8_t []) {0}, 1, 1);
         WRITE(parser, (uint8_t []) {(label->offset - ins->offset)}, 1, 1);
     }
-    // WRITE(parser, (uint8_t []) {ins->offset < label->offset ? 0 : 0xff}, 1, 1);
-    // WRITE(parser, (uint8_t []) {255 - my_abs(ins->offset - label->offset)}, 1, 1);
+
     return (0);
 }
 
@@ -65,14 +59,10 @@ int encode_instruction(parser_t *parser, instruction_t *ins)
             encode_label(parser, ins, i);
         if (ins->argv[i].size == 1)
             WRITE(parser, ENCODE_8(ins->argv[i].value), 1, 1);
-        if (ins->argv[i].size == 2 && (ins->argv[i].type & T_LAB) == 0) {
-            printf("=>%s\n", ins->argv[i].value);
+        if (ins->argv[i].size == 2 && (ins->argv[i].type & T_LAB) == 0)
             WRITE(parser, ENCODE_16(ins->argv[i].value), 2, 1);
-        }
-        if (ins->argv[i].size == 4) {
-            printf("DIR%s\n", ins->argv[i].value);
+        if (ins->argv[i].size == 4)
             WRITE(parser, ENCODE_32(ins->argv[i].value), 4, 1);
-        }
     }
 
     return 0;

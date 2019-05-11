@@ -10,11 +10,14 @@
 
 #include <stdio.h>
 #include <stddef.h>
+#include <unistd.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <byteswap.h>
+#include <sys/types.h>
 
 #include "list.h"
 #include "config.h"
-#include <sys/types.h>
-#include <stdbool.h>
 
 typedef struct parser {
     FILE *in;
