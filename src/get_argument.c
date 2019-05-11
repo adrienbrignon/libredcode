@@ -21,20 +21,31 @@ static char *extract_label(char *str)
     return str;
 }
 
+static int is_nbr(char *str)
+{
+    size_t i = 0;
+
+    if (str[i] == '-')
+        i++;
+    for (; str[i] != '\0'; i++) {
+        if (!my_isdigit(str[i]))
+            return 0;
+    }
+    return 1;
+}
+
 static char *extract_argument(char *str)
 {
-    if (*str == DIR_CHAR && (my_isdigit(str[1]) || str[1] == LAB_CHAR))
+    if (*str == DIR_CHAR && is_nbr(&str[1]))
         return str + 1;
-    if (*str == REG_CHAR) {
+    if (*str == REG_CHAR && is_nbr(&str[1])) {
         if (my_atoi(str + 1) > 0 && my_atoi(str + 1) <= REG_COUNT)
             return str + 1;
 
         return NULL;
     }
 
-    if (*str != DIR_CHAR && str[1] == LAB_CHAR)
-        return str + 1;
-    if (*str != DIR_CHAR && my_isdigit(str[1]))
+    if (*str != DIR_CHAR && is_nbr(&str[1]))
         return str;
 
     return NULL;
