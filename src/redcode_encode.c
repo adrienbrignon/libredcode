@@ -36,17 +36,17 @@ static int encode_header(parser_t *parser)
     if (name == NULL || comment == NULL)
         return -1;
 
-    redcode_write(parser, (uint32_t []) {REDCODE_HEADER}, 4, 1);
-    redcode_write(parser, name->value, 1, my_strlen(name->value));
+    WRITE(parser, (uint32_t []) {REDCODE_HEADER}, 4, 1);
+    WRITE(parser, name->value, 1, my_strlen(name->value));
 
     for (size_t i = 0; i < NAME_LENGTH; i++)
-        redcode_write(parser, (uint8_t []) {0}, 1, 1);
+        WRITE(parser, (uint8_t []) {0}, 1, 1);
 
-    redcode_write(parser, (uint32_t []) {__bswap_32(parser->size)}, 4, 1);
-    redcode_write(parser, comment->value, 1, my_strlen(comment->value));
+    WRITE(parser, (uint32_t []) {__bswap_32(parser->size)}, 4, 1);
+    WRITE(parser, comment->value, 1, my_strlen(comment->value));
 
     for (size_t i = 0; i < (COMMENT_LENGTH - sizeof (int)); i++)
-        redcode_write(parser, (uint8_t []) {0}, 1, 1);
+        WRITE(parser, (uint8_t []) {0}, 1, 1);
 
     return 0;
 }

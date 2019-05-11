@@ -1,3 +1,8 @@
+# Corewar specific files
+*.cor
+*.s
+/main.c
+
 # Sublime Text
 *.sublime-workspace
 
