@@ -22,11 +22,6 @@ typedef struct parser {
     size_t size;
 } parser_t;
 
-typedef struct label {
-    const char *name;
-    off_t offset;
-} label_t;
-
 typedef struct directive {
     const char *name;
     const char *value;
