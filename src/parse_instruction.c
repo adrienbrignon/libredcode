@@ -28,21 +28,15 @@ static int get_arguments(parser_t *parser, instruction_t *ins, char *line)
 
     for (i = 0; i < ins->mnemonic.argc && arg != NULL; i++) {
         ins->argv[i] = get_argument(ins->mnemonic.argv[i], arg);
-        if (ins->argv[i].value == NULL) {
-            printf("The argument given to the instruction is invalid.\n");
-            return -1;
-        }
+        if (ins->argv[i].value == NULL)
+            return ERROR(-1, "The argument given to the instruction is invalid.\n");
         ins->size = ins->size + ins->argv[i].size;
         arg = my_strtok(NULL, (char []) {SEPARATOR_CHAR, '\0'});
     }
-    if (arg != NULL) {
-        printf("Too many arguments given to the instruction.\n");
-        return -1;
-    }
-    if (i < ins->mnemonic.argc) {
-        printf("The argument given to the instruction is invalid.\n");
-        return -1;
-    }
+    if (arg != NULL)
+        return ERROR(-1, "Too many arguments given to the instruction.\n");
+    if (i < ins->mnemonic.argc)
+        return ERROR(-1, "The argument given to the instruction is invalid.\n");
     return 0;
 }
 
