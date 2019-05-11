@@ -17,6 +17,8 @@ static void coding_byte(parser_t *parser, instruction_t *ins)
 {
     char byte[CHAR_BIT + 1] = {0};
 
+    if (!ins->mnemonic.coding_byte)
+        return;
     for (size_t i = 0; i < ins->mnemonic.argc; i++) {
         if ((ins->argv[i].type & T_IND) == T_IND)
             my_strcat(byte, "11");
@@ -30,18 +32,47 @@ static void coding_byte(parser_t *parser, instruction_t *ins)
     WRITE(parser, (uint8_t []) {strtol(byte, NULL, 2)}, 1, 1);
 }
 
+static int encode_label(parser_t *parser, instruction_t *ins, size_t i)
+{
+    instruction_t *label = find_label(parser, ins->argv[i].value);
+
+    if (label == NULL)
+        return (-1);
+    
+    printf("%ld\n", label->offset);
+    printf("%s\n", ins->mnemonic.name);
+    printf("%ld\n", ins->offset);
+    if (ins->offset > label->offset) {
+        WRITE(parser, (uint8_t []) {0xff}, 1, 1);
+        WRITE(parser, (uint8_t []) {255 - (ins->offset - label->offset)}, 1, 1);
+        
+    } else {
+        WRITE(parser, (uint8_t []) {0}, 1, 1);
+        WRITE(parser, (uint8_t []) {(label->offset - ins->offset)}, 1, 1);
+    }
+    // WRITE(parser, (uint8_t []) {ins->offset < label->offset ? 0 : 0xff}, 1, 1);
+    // WRITE(parser, (uint8_t []) {255 - my_abs(ins->offset - label->offset)}, 1, 1);
+    return (0);
+}
+
 int encode_instruction(parser_t *parser, instruction_t *ins)
 {
     WRITE(parser, (char []) {ins->mnemonic.code}, 1, 1);
     coding_byte(parser, ins);
 
     for (size_t i = 0; i < ins->mnemonic.argc; i++) {
+        if ((ins->argv[i].type & T_LAB) == T_LAB)
+            encode_label(parser, ins, i);
         if (ins->argv[i].size == 1)
             WRITE(parser, ENCODE_8(ins->argv[i].value), 1, 1);
-        if (ins->argv[i].size == 2)
+        if (ins->argv[i].size == 2 && (ins->argv[i].type & T_LAB) == 0) {
+            printf("=>%s\n", ins->argv[i].value);
             WRITE(parser, ENCODE_16(ins->argv[i].value), 2, 1);
-        if (ins->argv[i].size == 4)
+        }
+        if (ins->argv[i].size == 4) {
+            printf("DIR%s\n", ins->argv[i].value);
             WRITE(parser, ENCODE_32(ins->argv[i].value), 4, 1);
+        }
     }
 
     return 0;

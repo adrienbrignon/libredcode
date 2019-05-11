@@ -13,6 +13,8 @@
 
 #include "list.h"
 #include "config.h"
+#include <sys/types.h>
+#include <stdbool.h>
 
 typedef struct parser {
     FILE *in;
@@ -48,6 +50,7 @@ typedef struct mnemonic {
     int argv[MAX_ARGS];
     char code;
     size_t cycles;
+    bool coding_byte;
 } mnemonic_t;
 
 typedef struct instruction {

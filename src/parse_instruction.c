@@ -48,8 +48,8 @@ instruction_t *parse_instruction(parser_t *parser, char *str)
 
     get_arguments(parser, ins, str);
 
-    parser->size = parser->size + ins->size + 2;
     ins->offset = parser->size;
+    parser->size = parser->size + ins->size + 2;
 
     return ins;
 }
