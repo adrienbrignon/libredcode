@@ -28,7 +28,6 @@ static int get_arguments(parser_t *parser, instruction_t *ins, char *line)
     for (size_t i = 0; i < ins->mnemonic.argc && arg != NULL; i++) {
         ins->argv[i] = get_argument(ins->mnemonic.argv[i], arg);
         ins->size = ins->size + ins->argv[i].size;
-        printf("%s\n", ins->argv[i].value);
         arg = my_strtok(NULL, (char []) {SEPARATOR_CHAR, '\0'});
     }
 
