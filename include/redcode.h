@@ -9,6 +9,7 @@
 #define REDCODE_H
 
 #include "types.h"
+#include "my/my_stdio.h"
 
 #define SWAP_16(x) (__bswap_16(x))
 #define SWAP_32(x) (__bswap_32(x))
@@ -17,8 +18,12 @@
 #define ENCODE_32(val) ((uint32_t []) {SWAP_32(my_atoi(val))})
 #define WRITE(parser, ptr, size, n) (fwrite(ptr, size, n, parser->out))
 
+#define ERROR(code, msg) ((my_puts(msg) * 0) + code)
+
+void encode_header(parser_t *parser);
 
 int parse_size(parser_t *parser);
+int encode_check(parser_t *parser);
 int parser_reset(parser_t *parser);
 int parse_labels(parser_t *parser);
 int redcode_encode(FILE *src, FILE *dst);
@@ -28,7 +33,7 @@ ssize_t readfile(FILE *fp, char **ptr);
 
 mnemonic_t get_mnemonic(const char *str);
 
-argument_t get_argument(unsigned int types, const char *str);
+argument_t get_argument(unsigned int types, char *str);
 
 directive_t *parse_directive(const char *str);
 directive_t *get_directive(parser_t *parser, const char *name);

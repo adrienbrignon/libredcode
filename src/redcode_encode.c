@@ -12,32 +12,6 @@
 #include "my/my_ctype.h"
 #include "my/my_string.h"
 
-static int encode_header(parser_t *parser)
-{
-    directive_t *name = get_directive(parser, "name");
-    directive_t *comment = get_directive(parser, "comment");
-
-    if (name == NULL || comment == NULL)
-        return -1;
-
-    WRITE(parser, (uint32_t []) {REDCODE_HEADER}, 4, 1);
-    WRITE(parser, name->value, 1, my_strlen(name->value));
-
-    for (size_t i = my_strlen(name->value); i < NAME_LENGTH; i++)
-        WRITE(parser, (uint8_t []) {0}, 1, 1);
-
-    WRITE(parser, (uint32_t []) {0}, 4, 1);
-    WRITE(parser, (uint32_t []) {__bswap_32(parser->size)}, 4, 1);
-    WRITE(parser, comment->value, 1, my_strlen(comment->value));
-
-    for (size_t i = my_strlen(comment->value); i < COMMENT_LENGTH; i++)
-        WRITE(parser, (uint8_t []) {0}, 1, 1);
-
-    WRITE(parser, (uint32_t []) {0}, 4, 1);
-
-    return 0;
-}
-
 static int encode(parser_t *parser)
 {
     node_t *node = parser->instructions->first;
@@ -73,13 +47,9 @@ int redcode_encode(FILE *src, FILE *dst)
             list_push(parser.instructions, ins);
         else if ((directive = parse_directive(line)) != NULL)
             list_push(parser.directives, directive);
-        else {
-            printf("Invalid instruction.\n");
-            return -1;
-        }
+        else
+            return ERROR(-1, "Invalid instruction.");
     }
 
-    encode(&parser);
-
-    return 0;
+    return encode_check(&parser) < 0 || encode(&parser) < 0 ? -1 : 0;
 }
