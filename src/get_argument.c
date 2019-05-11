@@ -28,7 +28,7 @@ static int is_nbr(char *str)
     if (str[i] == '-')
         i++;
     for (; str[i] != '\0'; i++) {
-        if (!my_isdigit(str[i]))
+        if (str[i] != ' ' && !my_isdigit(str[i]))
             return 0;
     }
     return 1;
