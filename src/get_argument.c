@@ -22,18 +22,24 @@ static char *extract_label(char *str)
 
 static char *extract_argument(char *str)
 {
-    if (str[0] == DIR_CHAR && (my_isdigit(str[1]) || str[1] == LAB_CHAR))
-        return (str + 1);
+    if (str[0] == DIR_CHAR) {
+        if (str[1] == '0')
+            return (str + 1);
+        else if (my_atoi(&str[1]) != 0)
+            return (str + 1);
+    }
     if (str[0] == REG_CHAR) {
         if (my_atoi(&str[1]) > 0 && my_atoi(&str[1]) < 17)
             return (str + 1);
         else
             return (NULL);
     }
-    if (str[0] != DIR_CHAR && str[1] == LAB_CHAR)
-        return (str + 1);
-    if (str[0] != DIR_CHAR && my_isdigit(str[1]))
-        return (str);
+    if (str[0] != DIR_CHAR) {
+        if (str[1] == '0')
+            return (str);
+        else if (my_atoi(&str[1]) != 0)
+            return (str);
+    }
     return (NULL);
 }
 
