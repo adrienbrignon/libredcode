@@ -23,8 +23,6 @@ ssize_t readfile(FILE *fp, char **ptr)
 
     (*ptr)[len - 1] = '\0';
 
-    printf("%s\n", *ptr);
-
     return len;
 }
 
