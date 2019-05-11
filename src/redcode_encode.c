@@ -23,14 +23,17 @@ static int encode_header(parser_t *parser)
     WRITE(parser, (uint32_t []) {REDCODE_HEADER}, 4, 1);
     WRITE(parser, name->value, 1, my_strlen(name->value));
 
-    for (size_t i = 0; i < NAME_LENGTH - (my_strlen(name->value) * 8); i++)
+    for (size_t i = my_strlen(name->value); i < NAME_LENGTH; i++)
         WRITE(parser, (uint8_t []) {0}, 1, 1);
 
+    WRITE(parser, (uint32_t []) {0}, 4, 1);
     WRITE(parser, (uint32_t []) {__bswap_32(parser->size)}, 4, 1);
     WRITE(parser, comment->value, 1, my_strlen(comment->value));
 
-    for (size_t i = 0; i < COMMENT_LENGTH - (my_strlen(comment->value) * 8) - 4; i++)
+    for (size_t i = my_strlen(comment->value); i < COMMENT_LENGTH; i++)
         WRITE(parser, (uint8_t []) {0}, 1, 1);
+
+    WRITE(parser, (uint32_t []) {0}, 4, 1);
 
     return 0;
 }
