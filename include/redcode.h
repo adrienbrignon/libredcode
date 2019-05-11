@@ -26,7 +26,11 @@ int parse_size(parser_t *parser);
 int encode_check(parser_t *parser);
 int parser_reset(parser_t *parser);
 int parse_labels(parser_t *parser);
+int has_invalid_labels(parser_t *parser);
 int redcode_encode(FILE *src, FILE *dst);
+int has_messy_directives(parser_t *parser);
+int has_invalid_directives(parser_t *parser);
+int has_duplicate_directives(parser_t *parser);
 int encode_instruction(parser_t *parser, instruction_t *instruction);
 int encode_label(parser_t *parser, instruction_t *ins, const char *name);
 

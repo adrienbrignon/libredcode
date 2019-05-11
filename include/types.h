@@ -19,6 +19,9 @@
 #include "list.h"
 #include "config.h"
 
+#define CHECK(callback, msg) {callback, msg}
+#define DONE() {NULL, NULL}
+
 typedef struct parser {
     FILE *in;
     FILE *out;
@@ -26,6 +29,13 @@ typedef struct parser {
     list_t *directives;
     size_t size;
 } parser_t;
+
+typedef int (check_callback_t)(parser_t *parser);
+
+typedef struct check {
+    check_callback_t *callback;
+    const char *message;
+} check_t;
 
 typedef struct directive {
     const char *name;
