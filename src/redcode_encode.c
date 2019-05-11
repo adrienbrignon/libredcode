@@ -12,22 +12,6 @@
 #include "my/my_ctype.h"
 #include "my/my_string.h"
 
-static int encode_instructions(parser_t *parser)
-{
-    node_t *node = parser->instructions->first;
-
-    while (node != NULL) {
-        instruction_t *ins = node->data;
-
-        if (ins->mnemonic.name != NULL)
-            encode_instruction(parser, ins);
-
-        node = node->next;
-    }
-
-    return 0;
-}
-
 static int encode_header(parser_t *parser)
 {
     directive_t *name = get_directive(parser, "name");
@@ -53,8 +37,18 @@ static int encode_header(parser_t *parser)
 
 static int encode(parser_t *parser)
 {
+    node_t *node = parser->instructions->first;
+
     encode_header(parser);
-    encode_instructions(parser);
+
+    while (node != NULL) {
+        instruction_t *ins = node->data;
+
+        if (ins->mnemonic.name != NULL)
+            encode_instruction(parser, ins);
+
+        node = node->next;
+    }
 
     return 0;
 }
