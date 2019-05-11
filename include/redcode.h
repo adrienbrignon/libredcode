@@ -30,6 +30,7 @@ int has_invalid_labels(parser_t *parser);
 int redcode_encode(FILE *src, FILE *dst);
 int has_messy_directives(parser_t *parser);
 int has_duplicate_labels(parser_t *parser);
+int has_invalid_arguments(parser_t *parser);
 int has_invalid_directives(parser_t *parser);
 int has_duplicate_directives(parser_t *parser);
 int encode_instruction(parser_t *parser, instruction_t *instruction);

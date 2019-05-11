@@ -19,8 +19,8 @@
 #include "list.h"
 #include "config.h"
 
-#define CHECK(callback, msg) {callback, msg}
 #define DONE() {NULL, NULL}
+#define CHECK(callback, msg) {callback, msg}
 
 typedef struct parser {
     FILE *in;

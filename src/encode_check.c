@@ -14,6 +14,7 @@ static const check_t checks[] = {
     CHECK(has_messy_directives, "The comment must be after the name."),
     CHECK(has_invalid_labels, "Invalid label definition."),
     CHECK(has_duplicate_labels, "Multiple definition of the same label."),
+    CHECK(has_invalid_arguments, "The instruction arguments are invalid."),
     DONE()
 };
 

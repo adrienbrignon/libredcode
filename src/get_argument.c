@@ -31,6 +31,7 @@ static int is_nbr(char *str)
         if (str[i] != ' ' && !my_isdigit(str[i]))
             return 0;
     }
+
     return 1;
 }
 

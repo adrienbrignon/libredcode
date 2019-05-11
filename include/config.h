@@ -8,29 +8,61 @@
 #ifndef REDCODE_CONFIG_H
 #define REDCODE_CONFIG_H
 
+#ifndef REDCODE_HEADER
 #define REDCODE_HEADER (0xf383ea00)
+#endif
 
+#ifndef MAX_ARGS
 #define MAX_ARGS (4)
+#endif
 
+#ifndef IND_SIZE
 #define IND_SIZE (2)
+#endif
 
+#ifndef REG_SIZE
 #define REG_SIZE (1)
+#endif
+#ifndef REG_CHAR
 #define REG_CHAR ('r')
+#endif
+#ifndef REG_COUNT
 #define REG_COUNT (16)
+#endif
 
+#ifndef DIR_SIZE
 #define DIR_SIZE (4)
+#endif
+#ifndef DIR_CHAR
 #define DIR_CHAR ('%')
+#endif
 
+#ifndef LAB_CHAR
 #define LAB_CHAR (':')
+#endif
+#ifndef COMMENT_CHAR
 #define COMMENT_CHAR ('#')
+#endif
+#ifndef SEPARATOR_CHAR
 #define SEPARATOR_CHAR (',')
+#endif
 
+#ifndef LAB_CHARS
 #define LAB_CHARS ("abcdefghijklmnopqrstuvwxyz_0123456788")
+#endif
 
+#ifndef NAME_STR
 #define NAME_STR ("name")
+#endif
+#ifndef NAME_LENGTH
 #define NAME_LENGTH (128)
+#endif
 
+#ifndef COMMENT_STR
 #define COMMENT_STR ("comment")
+#endif
+#ifndef COMMENT_LENGTH
 #define COMMENT_LENGTH (2048)
+#endif
 
 #endif

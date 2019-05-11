@@ -10,38 +10,36 @@
 #include "redcode.h"
 #include "my/my_string.h"
 
-static int get_arguments(parser_t *parser, instruction_t *ins, char *line)
+static int check_argument(instruction_t *ins, const char *arg, size_t i)
 {
-    char *str = NULL;
-    char *arg = NULL;
-    size_t i;
-
-    if (ins->mnemonic.name == NULL)
-        return 0;
-
-    str = line + my_strlen(ins->mnemonic.name) + 1;
-
-    if (ins->label != NULL)
-        str += my_strlen(ins->label) + 1;
-
-    arg = my_strtok(str, (char []) {SEPARATOR_CHAR, '\0'});
-
-    for (i = 0; i < ins->mnemonic.argc && arg != NULL; i++) {
-        ins->argv[i] = get_argument(ins->mnemonic.argv[i], arg);
-
-        if (ins->argv[i].value == NULL)
-            return ERROR(-1, "The argument given to the instruction is invalid.");
-
-        ins->size = ins->size + ins->argv[i].size;
-        arg = my_strtok(NULL, (char []) {SEPARATOR_CHAR, '\0'});
-    }
-
     if (arg != NULL)
         return ERROR(-1, "Too many arguments given to the instruction.");
     if (i < ins->mnemonic.argc)
         return ERROR(-1, "The argument given to the instruction is invalid.");
 
     return 0;
+}
+
+static int get_arguments(parser_t *parser, instruction_t *ins, char *line)
+{
+    size_t i;
+    char *str = NULL;
+    char *arg = NULL;
+
+    if (ins->mnemonic.name == NULL)
+        return 0;
+
+    str = line + my_strlen(ins->mnemonic.name) + 1;
+    str += ins->label != NULL ? my_strlen(ins->label) + 1 : 0;
+    arg = my_strtok(str, (char []) {SEPARATOR_CHAR, '\0'});
+
+    for (i = 0; i < ins->mnemonic.argc && arg != NULL; i++) {
+        ins->argv[i] = get_argument(ins->mnemonic.argv[i], arg);
+        ins->size = ins->size + ins->argv[i].size;
+        arg = my_strtok(NULL, (char []) {SEPARATOR_CHAR, '\0'});
+    }
+
+    return check_argument(ins, arg, i);
 }
 
 instruction_t *parse_instruction(parser_t *parser, char *str)
@@ -58,7 +56,7 @@ instruction_t *parse_instruction(parser_t *parser, char *str)
     ins->mnemonic = get_mnemonic(ins->label ? str + len + 1 : str);
 
     if (get_arguments(parser, ins, str) < 0)
-        return (NULL);
+        return NULL;
 
     ins->offset = parser->size;
 
