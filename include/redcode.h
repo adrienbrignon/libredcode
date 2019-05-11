@@ -28,6 +28,7 @@ int parser_reset(parser_t *parser);
 int parse_labels(parser_t *parser);
 int redcode_encode(FILE *src, FILE *dst);
 int encode_instruction(parser_t *parser, instruction_t *instruction);
+int encode_label(parser_t *parser, instruction_t *ins, const char *name);
 
 ssize_t readfile(FILE *fp, char **ptr);
 

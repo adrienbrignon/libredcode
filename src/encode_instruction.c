@@ -48,26 +48,17 @@ static void coding_byte(parser_t *parser, instruction_t *ins)
     WRITE(parser, (uint8_t []) {get_dec(byte)}, 1, 1);
 }
 
-static int encode_label(parser_t *parser, instruction_t *ins, size_t i)
-{
-    instruction_t *label = find_label(parser, ins->argv[i].value);
-
-    if (label == NULL)
-        return -1;
-
-    WRITE(parser, (uint16_t []) {SWAP_16(label->offset - ins->offset)}, 2, 1);
-
-    return (0);
-}
-
 int encode_instruction(parser_t *parser, instruction_t *ins)
 {
     WRITE(parser, (char []) {ins->mnemonic.code}, 1, 1);
     coding_byte(parser, ins);
 
     for (size_t i = 0; i < ins->mnemonic.argc; i++) {
-        if ((ins->argv[i].type & T_LAB) == T_LAB)
-            encode_label(parser, ins, i);
+        if ((ins->argv[i].type & T_LAB) == T_LAB) {
+            if (encode_label(parser, ins, ins->argv[i].value) < 0)
+                return -1;
+        }
+
         if (ins->argv[i].size == 1)
             WRITE(parser, ENCODE_8(ins->argv[i].value), 1, 1);
         if (ins->argv[i].size == 2 && (ins->argv[i].type & T_LAB) == 0)

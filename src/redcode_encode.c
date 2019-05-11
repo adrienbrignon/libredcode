@@ -21,8 +21,10 @@ static int encode(parser_t *parser)
     while (node != NULL) {
         instruction_t *ins = node->data;
 
-        if (ins->mnemonic.name != NULL)
-            encode_instruction(parser, ins);
+        if (ins->mnemonic.name != NULL) {
+            if (encode_instruction(parser, ins) < 0)
+                return -1;
+        }
 
         node = node->next;
     }
