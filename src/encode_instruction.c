@@ -10,16 +10,29 @@
 #include <limits.h>
 
 #include "redcode.h"
+#include "my/my_math.h"
 #include "my/my_string.h"
 #include "my/my_stdlib.h"
 
+static char to_dec(const char *binary)
+{
+    char result = 0;
+    int len = my_strlen(binary);
+
+    for (int counter = 0; counter < len; counter++)
+        result += ((binary[len - counter - 1] - '0') * my_pow(2, counter));
+
+    return result;
+}
+
 static void coding_byte(parser_t *parser, instruction_t *ins)
 {
+    size_t i;
     char byte[CHAR_BIT + 1] = {0};
 
     if (!ins->mnemonic.coding_byte)
         return;
-    for (size_t i = 0; i < ins->mnemonic.argc; i++) {
+    for (i = 0; i < ins->mnemonic.argc; i++) {
         if ((ins->argv[i].type & T_IND) == T_IND)
             my_strcat(byte, "11");
         if ((ins->argv[i].type & T_DIR) == T_DIR)
@@ -28,7 +41,9 @@ static void coding_byte(parser_t *parser, instruction_t *ins)
             my_strcat(byte, "01");
     }
 
-    my_strcat(byte, "00");
+    for (; i < 4; i++)
+        my_strcat(byte, "00");
+
     WRITE(parser, (uint8_t []) {strtol(byte, NULL, 2)}, 1, 1);
 }
 

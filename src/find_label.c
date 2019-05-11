@@ -15,9 +15,8 @@ instruction_t *find_label(parser_t *parser, const char *name)
     while (node != NULL) {
         instruction_t *ins = node->data;
 
-        if (ins->label != NULL && my_strcmp(ins->label, name) == 0) {
+        if (ins->label != NULL && my_strcmp(ins->label, name) == 0)
             return ins;
-        }
 
         node = node->next;
     }
