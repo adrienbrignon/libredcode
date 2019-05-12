@@ -66,7 +66,7 @@
 #endif
 
 #ifndef LAB_CHARS
-#define LAB_CHARS ("abcdefghijklmnopqrstuvwxyz_0123456788")
+#define LAB_CHARS ("abcdefghijklmnopqrstuvwxyz_0123456789")
 #endif
 
 #ifndef NAME_STR

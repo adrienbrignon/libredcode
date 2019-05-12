@@ -69,4 +69,3 @@ int encode_instruction(parser_t *parser, instruction_t *ins)
 
     return 0;
 }
-
