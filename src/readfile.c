@@ -13,10 +13,10 @@ static char *clean_line(char *str)
 {
     size_t idx = 0;
 
-    for (size_t i = 0; str[i]; i++) {
+    for (size_t i = 0; str[i] != '\0'; i++) {
         if (!my_isspace(str[i]))
             str[idx++] = str[i];
-        else if (idx && str[i + 1] && !my_isspace(str[i + 1]))
+        else if (str[i + 1] != '\0' && !my_isspace(str[i + 1]))
             str[idx++] = ' ';
     }
 

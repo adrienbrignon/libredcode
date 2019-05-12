@@ -49,6 +49,7 @@ argument_t get_argument(unsigned int types, char *str);
 directive_t *parse_directive(const char *str);
 directive_t *get_directive(parser_t *parser, const char *name);
 
+instruction_t *new_instruction(void);
 instruction_t *find_label(parser_t *parser, const char *name);
 instruction_t *parse_instruction(parser_t *parser, char *line);
 

@@ -15,14 +15,16 @@ directive_t *parse_directive(const char *str)
 {
     directive_t *dir = NULL;
 
-    while (my_isspace(*str))
-        str++;
     if ((dir = malloc(sizeof *dir)) == NULL || *str != '.')
         return NULL;
     if ((dir->name = my_strndup(str + 1, my_strcspn(str, " ") - 1)) == NULL)
         return NULL;
 
     dir->value = ((char *) str + 1) + my_strcspn(str, " ");
+
+    if (*dir->value != '"' || dir->value[my_strlen(dir->value) - 1] != '"')
+        return NULL;
+
     dir->value = my_strndup(dir->value + 1, my_strlen(dir->value + 1) - 1);
 
     if (dir->value == NULL)

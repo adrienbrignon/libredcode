@@ -8,6 +8,24 @@
 #ifndef REDCODE_CONFIG_H
 #define REDCODE_CONFIG_H
 
+#define NULL_ARGV {0}
+#define AFF_ARGV {T_REG}
+#define LIVE_ARGV {T_DIR}
+#define LFORK_ARGV {T_DIR}
+#define ZJMP_ARGV {T_DIR | T_SPE}
+#define FORK_ARGV {T_DIR | T_SPE}
+#define ST_ARGV {T_REG, T_IND | T_REG}
+#define LD_ARGV {T_DIR | T_IND, T_REG}
+#define ADD_ARGV {T_REG, T_REG, T_REG}
+#define SUB_ARGV {T_REG, T_REG, T_REG}
+#define LLD_ARGV {T_DIR | T_IND, T_REG}
+#define LLDI_ARGV {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}
+#define AND_ARGV {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}
+#define XOR_ARGV {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}
+#define OR_ARGV {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}
+#define STI_ARGV {T_REG, T_REG | T_DIR | T_IND | T_SPE, T_DIR | T_REG | T_SPE}
+#define LDI_ARGV {T_REG | T_DIR | T_IND | T_SPE, T_DIR | T_REG | T_SPE, T_REG}
+
 #ifndef REDCODE_HEADER
 #define REDCODE_HEADER (0xf383ea00)
 #endif

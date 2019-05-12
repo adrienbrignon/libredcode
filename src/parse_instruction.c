@@ -47,7 +47,7 @@ instruction_t *parse_instruction(parser_t *parser, char *str)
     instruction_t *ins = NULL;
     size_t len = my_strcspn(str, (char []) {LAB_CHAR, '\0'});
 
-    if ((ins = malloc(sizeof *ins)) == NULL)
+    if ((ins = new_instruction()) == NULL)
         return NULL;
     if (str[len] == ':' && (str[len + 1] == ' ' || str[len + 1] == '\0'))
         if ((ins->label = my_strndup(str, len)) == NULL)
