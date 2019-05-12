@@ -35,4 +35,3 @@ int redcode_check(parser_t *parser, const char **msg)
 
     return 0;
 }
-
