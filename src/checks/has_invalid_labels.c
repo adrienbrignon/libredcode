@@ -17,9 +17,9 @@ int has_invalid_labels(parser_t *parser)
 
         if (ins->label == NULL)
             continue;
-        if (my_strspn(ins->label, LAB_CHARS) != my_strlen(ins->label)) {
+
+        if (my_strspn(ins->label, LAB_CHARS) != my_strlen(ins->label))
             return 1;
-        }
     }
 
     return 0;
