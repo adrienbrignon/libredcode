@@ -30,22 +30,23 @@ static char *clean_line(char *str)
 ssize_t readfile(FILE *fp, char **ptr)
 {
     size_t n = 0;
-    ssize_t len = 0;
+    size_t len = 0;
     char *comment = NULL;
 
-    if ((len = getline(ptr, &n, fp)) == EOF)
-        return len;
+    if ((getline(ptr, &n, fp)) == EOF)
+        return -1;
     if (**ptr == '\n' || **ptr == '\0' || **ptr == '#')
         return readfile(fp, ptr);
     if ((comment = my_strchr(*ptr, '#')) != NULL)
         *comment = '\0';
-    if ((*ptr)[len - 1] == '\n')
-        (*ptr)[len - 1] = '\0';
 
     *ptr = clean_line(*ptr);
+    len = my_strlen(*ptr);
 
-    if (**ptr == '\0')
+    if (len == 0 || **ptr == '\0')
         return readfile(fp, ptr);
+    if ((*ptr)[len - 1] == '\n')
+        (*ptr)[len - 1] = '\0';
 
     return len;
 }
