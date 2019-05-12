@@ -22,13 +22,13 @@ static const check_t checks[] = {
     DONE()
 };
 
-int encode_check(parser_t *parser)
+int redcode_check(parser_t *parser, const char **msg)
 {
     for (size_t i = 0; checks[i].callback != NULL; i++) {
         if (!checks[i].callback(parser))
             continue;
 
-        my_puts(checks[i].message);
+        *msg = checks[i].message;
 
         return -1;
     }

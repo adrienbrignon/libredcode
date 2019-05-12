@@ -37,9 +37,9 @@ ssize_t readfile(FILE *fp, char **ptr)
         return readfile(fp, ptr);
     if ((comment = my_strchr(*ptr, '#')) != NULL)
         *comment = '\0';
-
     if ((*ptr)[len - 1] == '\n')
         (*ptr)[len - 1] = '\0';
+
     *ptr = clean_line(*ptr);
 
     return len;

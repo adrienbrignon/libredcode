@@ -23,13 +23,18 @@
 void encode_header(parser_t *parser);
 
 int parse_size(parser_t *parser);
-int encode_check(parser_t *parser);
 int parser_reset(parser_t *parser);
 int parse_labels(parser_t *parser);
+int redcode_encode(parser_t *parser);
+int redcode_setinput(parser_t *parser, FILE *in);
+int redcode_setoutput(parser_t *parser, FILE *out);
+int redcode_check(parser_t *parser, const char **msg);
+int encode_instruction(parser_t *parser, instruction_t *instruction);
+int encode_label(parser_t *parser, instruction_t *ins, const char *name);
+
 int has_invalid_name(parser_t *parser);
 int has_missing_name(parser_t *parser);
 int has_invalid_labels(parser_t *parser);
-int redcode_encode(FILE *src, FILE *dst);
 int has_missing_comment(parser_t *parser);
 int has_invalid_comment(parser_t *parser);
 int has_messy_directives(parser_t *parser);
@@ -37,10 +42,11 @@ int has_duplicate_labels(parser_t *parser);
 int has_invalid_arguments(parser_t *parser);
 int has_invalid_directives(parser_t *parser);
 int has_duplicate_directives(parser_t *parser);
-int encode_instruction(parser_t *parser, instruction_t *instruction);
-int encode_label(parser_t *parser, instruction_t *ins, const char *name);
 
 ssize_t readfile(FILE *fp, char **ptr);
+
+parser_t *redcode_parser(void);
+parser_t *redcode_parse(FILE *in);
 
 mnemonic_t get_mnemonic(const char *str);
 
