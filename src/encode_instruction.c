@@ -55,13 +55,15 @@ int encode_instruction(parser_t *parser, instruction_t *ins)
 
     for (size_t i = 0; i < ins->mnemonic.argc; i++) {
         if ((ins->argv[i].type & T_LAB) == T_LAB) {
-            if (encode_label(parser, ins, ins->argv[i].value) < 0)
+            if (encode_label(parser, ins, i) < 0)
                 return -1;
         }
 
+        if ((ins->argv[i].type & T_LAB) == T_LAB)
+            continue;
         if (ins->argv[i].size == 1)
             WRITE(parser, ENCODE_8(ins->argv[i].value), 1, 1);
-        if (ins->argv[i].size == 2 && (ins->argv[i].type & T_LAB) == 0)
+        if (ins->argv[i].size == 2)
             WRITE(parser, ENCODE_16(ins->argv[i].value), 2, 1);
         if (ins->argv[i].size == 4)
             WRITE(parser, ENCODE_32(ins->argv[i].value), 4, 1);
@@ -69,4 +71,3 @@ int encode_instruction(parser_t *parser, instruction_t *ins)
 
     return 0;
 }
-

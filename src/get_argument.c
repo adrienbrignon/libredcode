@@ -58,11 +58,13 @@ argument_t get_argument(unsigned int types, char *str)
         str++;
     if (*str == LAB_CHAR)
         return (argument_t) {T_LAB | T_IND, IND_SIZE, extract_label(str)};
+    if (*str == DIR_CHAR && *(str + 1) == LAB_CHAR && (types & T_4B) == T_4B)
+        return (argument_t) {T_LAB | T_DIR, DIR_SIZE, extract_label(str)};
     if (*str == DIR_CHAR && *(str + 1) == LAB_CHAR)
         return (argument_t) {T_LAB | T_DIR, IND_SIZE, extract_label(str)};
     if (*str == REG_CHAR)
         return (argument_t) {T_REG, REG_SIZE, extract_argument(str)};
-    if (*str == DIR_CHAR && (types & T_SPE) == T_SPE)
+    if (*str == DIR_CHAR && (types & T_2B) == T_2B)
         return (argument_t) {T_DIR, IND_SIZE, extract_argument(str)};
     if (*str == DIR_CHAR)
         return (argument_t) {T_DIR, DIR_SIZE, extract_argument(str)};

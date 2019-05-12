@@ -29,8 +29,8 @@ int redcode_encode(parser_t *parser);
 int redcode_setinput(parser_t *parser, FILE *in);
 int redcode_setoutput(parser_t *parser, FILE *out);
 int redcode_check(parser_t *parser, const char **msg);
+int encode_label(parser_t *parser, instruction_t *ins, size_t i);
 int encode_instruction(parser_t *parser, instruction_t *instruction);
-int encode_label(parser_t *parser, instruction_t *ins, const char *name);
 
 int has_invalid_name(parser_t *parser);
 int has_missing_name(parser_t *parser);
