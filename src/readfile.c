@@ -13,6 +13,8 @@ static char *clean_line(char *str)
 {
     size_t idx = 0;
 
+    while (my_isspace(*str))
+        str++;
     for (size_t i = 0; str[i] != '\0'; i++) {
         if (!my_isspace(str[i]))
             str[idx++] = str[i];
@@ -41,6 +43,9 @@ ssize_t readfile(FILE *fp, char **ptr)
         (*ptr)[len - 1] = '\0';
 
     *ptr = clean_line(*ptr);
+
+    if (**ptr == '\0')
+        return readfile(fp, ptr);
 
     return len;
 }
