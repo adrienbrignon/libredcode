@@ -22,7 +22,7 @@ directive_t *parse_directive(const char *str)
 
     dir->value = ((char *) str + 1) + my_strcspn(str, " ");
 
-    if (my_strlen(dir->value) <= 2)
+    if (my_strlen(dir->value) < 2)
         return NULL;
     if (*dir->value != '"' || dir->value[my_strlen(dir->value) - 1] != '"')
         return NULL;

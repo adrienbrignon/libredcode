@@ -15,6 +15,8 @@ int has_invalid_directives(parser_t *parser)
     for (; node != NULL; node = node->next) {
         directive_t *directive = node->data;
 
+        if (directive->name == NULL || directive->value == NULL)
+            return 1;
         if (my_strcmp(directive->name, NAME_STR) == 0)
             continue;
         if (my_strcmp(directive->name, COMMENT_STR) == 0)

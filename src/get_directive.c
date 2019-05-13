@@ -16,7 +16,7 @@ directive_t *get_directive(parser_t *parser, const char *name)
         directive_t *directive = node->data;
 
         if (my_strcmp(directive->name, name) == 0) {
-            if (directive->value == NULL || directive->value[0] == '\0')
+            if (directive->value == NULL)
                 return NULL;
 
             return directive;
