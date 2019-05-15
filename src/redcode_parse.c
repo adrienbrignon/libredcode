@@ -14,12 +14,13 @@ parser_t *redcode_parse(FILE *in)
 
     if ((parser = redcode_parser()) == NULL || redcode_setinput(parser, in) < 0)
         return NULL;
-    while (readfile(parser->in, &line) >= 0) {
+    while (readfile(parser->in, &line) != EOF) {
         instruction_t *ins = NULL;
         directive_t *directive = NULL;
 
         if ((ins = parse_instruction(parser, line)) == NULL)
             return NULL;
+
         if (ins->mnemonic.name != NULL || ins->label != NULL)
             list_push(parser->instructions, ins);
         else if ((directive = parse_directive(line)) != NULL)
@@ -27,6 +28,5 @@ parser_t *redcode_parse(FILE *in)
         else
             return NULL;
     }
-
     return parser;
 }
