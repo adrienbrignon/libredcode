@@ -15,9 +15,9 @@ parser_t *redcode_parser(void)
 
     if ((parser = malloc(sizeof *parser)) == NULL)
         return NULL;
-    if ((parser->instructions = new_list()) == NULL)
+    if ((parser->instructions = list_new()) == NULL)
         return NULL;
-    if ((parser->directives = new_list()) == NULL)
+    if ((parser->directives = list_new()) == NULL)
         return NULL;
 
     parser->size = 0;

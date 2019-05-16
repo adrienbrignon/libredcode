@@ -34,5 +34,6 @@ parser_t *redcode_parse(FILE *in)
         if (push(parser, ins, line) < 0)
             return NULL;
     }
+
     return parser;
 }
