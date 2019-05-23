@@ -5,7 +5,18 @@
 ** Parse a file.
 */
 
+#include <stdlib.h>
+
 #include "redcode.h"
+
+static parser_t *free_and_return_parser(parser_t *parser, instruction_t *ins)
+{
+    free((void *) ins->line);
+    free((void *) ins->label);
+    free((void *) ins);
+
+    return parser;
+}
 
 static int push(parser_t *parser, instruction_t *ins, char *line)
 {
@@ -30,9 +41,9 @@ parser_t *redcode_parse(FILE *in)
         instruction_t *ins = NULL;
 
         if ((ins = parse_instruction(parser, line)) == NULL)
-            return NULL;
+            return free_and_return_parser(parser, ins);
         if (push(parser, ins, line) < 0)
-            return NULL;
+            return free_and_return_parser(parser, ins);
     }
 
     return parser;

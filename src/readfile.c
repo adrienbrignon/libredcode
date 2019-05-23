@@ -5,6 +5,8 @@
 ** Read a file line by line.
 */
 
+#include <stdlib.h>
+
 #include "redcode.h"
 #include "my/my_ctype.h"
 #include "my/my_string.h"
@@ -27,24 +29,33 @@ static char *clean_line(char *str)
     return str;
 }
 
+static int retry(FILE *fp, char **ptr)
+{
+    free(*ptr);
+
+    *ptr = NULL;
+
+    return readfile(fp, ptr);
+}
+
 ssize_t readfile(FILE *fp, char **ptr)
 {
     size_t n = 0;
     size_t len = 0;
     char *comment = NULL;
 
-    if ((getline(ptr, &n, fp)) == EOF)
+    if ((getline(ptr, &n, fp)) == EOF) {
+        free(*ptr);
         return -1;
+    }
     if (**ptr == '\n' || **ptr == '\0' || **ptr == '#')
-        return readfile(fp, ptr);
+        return retry(fp, ptr);
     if ((comment = my_strchr(*ptr, '#')) != NULL)
         *comment = '\0';
-
     *ptr = clean_line(*ptr);
     len = my_strlen(*ptr);
-
     if (len == 0 || **ptr == '\0')
-        return readfile(fp, ptr);
+        return retry(fp, ptr);
     if ((*ptr)[len - 1] == '\n')
         (*ptr)[len - 1] = '\0';
 

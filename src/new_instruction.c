@@ -9,7 +9,7 @@
 
 #include "redcode.h"
 
-instruction_t *new_instruction(void)
+instruction_t *new_instruction(const char *line)
 {
     instruction_t base = {0};
     instruction_t *instruction = NULL;
@@ -18,6 +18,7 @@ instruction_t *new_instruction(void)
         return NULL;
 
     *instruction = base;
+    instruction->line = line;
 
     return instruction;
 }

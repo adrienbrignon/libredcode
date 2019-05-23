@@ -26,6 +26,7 @@ int parse_size(parser_t *parser);
 int parser_reset(parser_t *parser);
 int parse_labels(parser_t *parser);
 int redcode_encode(parser_t *parser);
+int redcode_destroy(parser_t *parser);
 int redcode_setinput(parser_t *parser, FILE *in);
 int redcode_setoutput(parser_t *parser, FILE *out);
 int redcode_check(parser_t *parser, const char **msg);
@@ -52,10 +53,11 @@ mnemonic_t get_mnemonic(const char *str);
 
 argument_t get_argument(unsigned int types, char *str);
 
+directive_t *new_directive(const char *str);
 directive_t *parse_directive(const char *str);
 directive_t *get_directive(parser_t *parser, const char *name);
 
-instruction_t *new_instruction(void);
+instruction_t *new_instruction(const char *line);
 instruction_t *find_label(parser_t *parser, const char *name);
 instruction_t *parse_instruction(parser_t *parser, char *line);
 

@@ -32,21 +32,29 @@ static int get_arguments(instruction_t *ins, char *line)
     return 0;
 }
 
+static void *free_and_return_null(instruction_t *ins)
+{
+    free((void *) ins->label);
+    free((void *) ins);
+
+    return NULL;
+}
+
 instruction_t *parse_instruction(parser_t *parser, char *str)
 {
     instruction_t *ins = NULL;
     size_t len = my_strcspn(str, (char []) {LAB_CHAR, '\0'});
 
-    if ((ins = new_instruction()) == NULL)
+    if ((ins = new_instruction(str)) == NULL)
         return NULL;
     if (str[len] == ':' && (str[len + 1] == ' ' || str[len + 1] == '\0'))
         if ((ins->label = my_strndup(str, len)) == NULL)
-            return NULL;
+            return free_and_return_null(ins);
 
     ins->mnemonic = get_mnemonic(ins->label ? str + len + 1 : str);
 
     if (ins->mnemonic.name != NULL && get_arguments(ins, str) < 0)
-        return NULL;
+        return free_and_return_null(ins);
 
     ins->offset = parser->size;
 

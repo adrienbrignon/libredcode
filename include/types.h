@@ -40,6 +40,7 @@ typedef struct check {
 typedef struct directive {
     const char *name;
     const char *value;
+    const char *line;
 } directive_t;
 
 typedef enum type {
@@ -70,6 +71,7 @@ typedef struct mnemonic {
 typedef struct instruction {
     size_t size;
     off_t offset;
+    const char *line;
     const char *label;
     mnemonic_t mnemonic;
     argument_t argv[MAX_ARGS];
